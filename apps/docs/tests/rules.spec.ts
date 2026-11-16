@@ -108,7 +108,9 @@ test('every Tab stop shows focus without a ring', async ({ page }) => {
   for (let i = 0; i < 140; i++) {
     await page.keyboard.press('Tab');
     await pause(80);
-    const result = await page.evaluate(() => {
+    const result = await page.evaluate(async () => {
+      // Let a busy page finish the focus change (scrolling, plates, tooltips) before reading it.
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       const el = document.activeElement;
       // A slider shows focus on its thumb, a pseudo-element computed styles cannot read.
       if (!(el instanceof HTMLElement) || el === document.body || el.matches('.cz-slider')) return null;
@@ -141,9 +143,17 @@ test('every Tab stop shows focus without a ring', async ({ page }) => {
       const blurred = read();
       el.focus({ focusVisible: true } as FocusOptions);
       delete root.dataset.czInstant;
-      return { name: target.outerHTML.slice(0, 80), ring, same: focused === blurred };
+      const label = (target.getAttribute('aria-label') ?? target.textContent ?? '').trim().slice(0, 32);
+      return {
+        name: `${target.tagName.toLowerCase()}.${target.className} "${label}"`,
+        ring,
+        same: focused === blurred,
+        focused,
+      };
     });
-    if (result && (result.ring || result.same)) invisible.push(result.name);
+    // A failure names the control and what it showed, focused and not, in the same words.
+    if (result?.ring) invisible.push(`${result.name}: draws a ring`);
+    else if (result?.same) invisible.push(`${result.name}: looks the same either way (${result.focused})`);
   }
   expect([...new Set(invisible)]).toEqual([]);
 });
@@ -228,8 +238,13 @@ test('right to left: controls, fields and toasts mirror', async ({ page }) => {
   await page.evaluate(() => {
     document.documentElement.dir = 'rtl';
   });
-  // The switch thumbs spring to their mirrored places.
-  await pause(800);
+  // The switch thumbs spring to their mirrored places; wait for them to land.
+  const checkedThumb = () =>
+    page.evaluate(() => {
+      const input = [...document.querySelectorAll<HTMLInputElement>('.cz-switch > input')].find((s) => s.checked);
+      return input ? getComputedStyle(input, '::after').translate : '';
+    });
+  await expect.poll(checkedThumb, { timeout: 3000 }).toContain('-14px');
   const mirrored = await page.evaluate(() => {
     const box = (el: Element | null | undefined) => el?.getBoundingClientRect();
     const switches = [...document.querySelectorAll<HTMLInputElement>('.cz-switch > input')];
@@ -243,13 +258,11 @@ test('right to left: controls, fields and toasts mirror', async ({ page }) => {
     const toaster = box(document.querySelector('.cz-toaster'));
     return {
       thumbStartsRight: thumb(false)?.right,
-      checkedMovesLeft: thumb(true)?.translate,
       iconOnRight: !!icon && !!input && icon.right > input.right - 40,
       toasterOnLeft: !!toaster && toaster.right < innerWidth / 2,
     };
   });
   expect(mirrored.thumbStartsRight).toBe('2px');
-  expect(mirrored.checkedMovesLeft).toContain('-14px');
   expect(mirrored.iconOnRight).toBe(true);
   expect(mirrored.toasterOnLeft).toBe(true);
 });
