@@ -17,25 +17,36 @@ test.beforeEach(async ({ page }) => {
 // Any page error fails the test that caused it.
 test.afterEach(() => expect(errors).toEqual([]));
 
-// Motion in flight is sampled at fixed moments; where things land is waited for, so a slow machine only waits longer.
+// Motion in flight is recorded inside the page, frame by frame, right from the action that starts it; where things
+// land is waited for. A slow machine then only takes longer, it never misses the moment.
 const settles = { timeout: 3000 } as const;
 
 test('the plate stretches while travelling, then lands on the choice', async ({ page }) => {
   await scrollTo(page, 'segmented');
+  const travel = await page.evaluate(async () => {
+    const segmented = document.querySelector('#segmented .cz-segmented') as HTMLElement;
+    const plate = segmented.querySelector('.cz-glide') as HTMLElement;
+    const year = [...segmented.querySelectorAll('label')].at(-1) as HTMLElement;
+    const start = plate.getBoundingClientRect().width;
+    year.click();
+    let widest = 0;
+    const until = performance.now() + 600;
+    while (performance.now() < until) {
+      widest = Math.max(widest, plate.getBoundingClientRect().width);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    return { start, widest, end: year.getBoundingClientRect().width };
+  });
+  // On the way it is wider than both where it started and where it lands.
+  expect(travel.widest).toBeGreaterThan(Math.max(travel.start, travel.end) + 4);
   const segmented = page.locator('#segmented .cz-segmented').first();
-  const width = () => segmented.evaluate((s) => s.querySelector('.cz-glide')?.getBoundingClientRect().width ?? 0);
-  const before = await width();
-  await segmented.locator('label', { hasText: 'Year' }).click();
-  await pause(70);
-  const mid = await width();
-  expect(mid).toBeGreaterThan(Math.max(before, 40) + 4);
-  const end = () =>
+  const landed = () =>
     segmented.evaluate((s) => {
       const plate = s.querySelector('.cz-glide')?.getBoundingClientRect();
       const year = [...s.querySelectorAll('label')].at(-1)?.getBoundingClientRect();
       return plate && year ? Math.abs(plate.left - year.left) + Math.abs(plate.width - year.width) : 99;
     });
-  await expect.poll(end, settles).toBeLessThan(1);
+  await expect.poll(landed, settles).toBeLessThan(1);
 });
 
 test('tabs: the plate follows hover and returns; the panel slides in', async ({ page }) => {
@@ -50,19 +61,27 @@ test('tabs: the plate follows hover and returns; the panel slides in', async ({ 
   await expect.poll(() => at('tab-3'), settles).toBe(true);
   await page.mouse.move(5, 5);
   await expect.poll(() => at('tab-1'), settles).toBe(true);
-  await page.click('#tab-2');
-  await pause(40);
-  expect(await page.evaluate(() => document.getElementById('panel-2')?.getAnimations().length)).toBeGreaterThan(0);
+  const sliding = await page.evaluate(() => {
+    (document.getElementById('tab-2') as HTMLElement).click();
+    return document.getElementById('panel-2')?.getAnimations().length ?? 0;
+  });
+  expect(sliding).toBeGreaterThan(0);
 });
 
 test('a menu grows out of its button and one plate follows the rows', async ({ page }) => {
   await scrollTo(page, 'menu');
-  await page.click('[popovertarget="menu-actions"]');
-  await pause(40);
-  const opening = Number(
-    await page.evaluate(() => getComputedStyle(document.getElementById('menu-actions') as Element).scale),
-  );
-  expect(opening).toBeLessThan(1);
+  const smallest = await page.evaluate(async () => {
+    const menu = document.getElementById('menu-actions') as HTMLElement;
+    (document.querySelector('[popovertarget="menu-actions"]') as HTMLElement).click();
+    let least = 1;
+    const until = performance.now() + 300;
+    while (performance.now() < until) {
+      least = Math.min(least, Number(getComputedStyle(menu).scale) || 1);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    return least;
+  });
+  expect(smallest).toBeLessThan(1);
   const chevron = () =>
     page.evaluate(
       () => getComputedStyle(document.querySelector('[popovertarget="menu-actions"] .cz-chevron') as Element).rotate,
@@ -85,15 +104,28 @@ test('a dialog grows out of its button and shrinks back, then opens again', asyn
   await scrollTo(page, 'dialog');
   const transform = () =>
     page.evaluate(() => getComputedStyle(document.getElementById('delete-dialog') as Element).transform);
-  await page.click('[commandfor="delete-dialog"] >> nth=0');
   const open = () => page.evaluate(() => (document.getElementById('delete-dialog') as HTMLDialogElement).open);
-  await pause(50);
-  expect(await transform()).not.toBe('none');
+  await page.evaluate(() => (document.getElementById('delete-dialog') as HTMLDialogElement).close());
+  const grew = await page.evaluate(async () => {
+    const dialog = document.getElementById('delete-dialog') as HTMLElement;
+    (document.querySelector('[commandfor="delete-dialog"]') as HTMLElement).click();
+    let moved = false;
+    const until = performance.now() + 300;
+    while (performance.now() < until && !moved) {
+      moved = getComputedStyle(dialog).transform !== 'none';
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    return moved;
+  });
+  expect(grew).toBe(true);
   await expect.poll(transform, settles).toBe('none');
-  await page.keyboard.press('Escape');
-  await pause(60);
-  // Still open while it shrinks back into its button.
-  expect(await open()).toBe(true);
+  // Escape starts the shrink back into its button; the dialog stays open until it lands.
+  const stillOpen = await page.evaluate(() => {
+    const dialog = document.getElementById('delete-dialog') as HTMLDialogElement;
+    dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+    return dialog.open;
+  });
+  expect(stillOpen).toBe(true);
   await expect.poll(open, settles).toBe(false);
   await page.click('[commandfor="delete-dialog"] >> nth=1');
   const opacity = () =>
@@ -103,13 +135,22 @@ test('a dialog grows out of its button and shrinks back, then opens again', asyn
 
 test('a sheet slides in, follows a drag and is thrown away', async ({ page }) => {
   await scrollTo(page, 'sheet');
-  await page.click('[commandfor="sheet-bottom"]');
   const drag = () =>
     page.evaluate(() =>
       Number.parseFloat(document.getElementById('sheet-bottom')?.style.getPropertyValue('--cz-drag') ?? '0'),
     );
-  await pause(60);
-  expect(await drag()).toBeGreaterThan(20);
+  const furthest = await page.evaluate(async () => {
+    const sheet = document.getElementById('sheet-bottom') as HTMLElement;
+    (document.querySelector('[commandfor="sheet-bottom"]') as HTMLElement).click();
+    let most = 0;
+    const until = performance.now() + 300;
+    while (performance.now() < until) {
+      most = Math.max(most, Number.parseFloat(sheet.style.getPropertyValue('--cz-drag') || '0'));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    return most;
+  });
+  expect(furthest).toBeGreaterThan(20);
   await expect.poll(drag, settles).toBeLessThan(1);
   const grabber = await page.locator('#sheet-bottom .cz-sheet-grabber').boundingBox();
   if (!grabber) throw new Error('no grabber');
@@ -170,26 +211,34 @@ test('a context menu opens where the pointer is', async ({ page }) => {
 test('a hover card waits, then grows out of its link', async ({ page }) => {
   await scrollTo(page, 'hover-card');
   const open = () => page.evaluate(() => document.getElementById('card-asha')?.matches(':popover-open'));
-  await page.hover('[data-cz-hovercard]');
-  await pause(200);
-  // Not yet: a passing pointer does not open it.
-  expect(await open()).toBe(false);
+  // Not yet after 200 ms on the page's own clock: a passing pointer does not open it.
+  const early = await page.evaluate(async () => {
+    (document.querySelector('[data-cz-hovercard]') as HTMLElement).dispatchEvent(new PointerEvent('pointerenter'));
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    return document.getElementById('card-asha')?.matches(':popover-open');
+  });
+  expect(early).toBe(false);
   await expect.poll(open, settles).toBe(true);
 });
 
 test('a number field rolls to the next value and shakes at its limit', async ({ page }) => {
   await scrollTo(page, 'number-field');
-  await page.click('#number-field .cz-number >> nth=0 >> [data-step="up"]');
-  await pause(60);
-  expect(await page.locator('#number-field .cz-number-roll').count()).toBe(1);
+  const rolled = await page.evaluate(() => {
+    const up = document.querySelector('#number-field .cz-number [data-step="up"]') as HTMLElement;
+    up.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0 }));
+    up.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, button: 0 }));
+    return document.querySelectorAll('#number-field .cz-number-roll').length;
+  });
+  expect(rolled).toBe(1);
   await expect(page.locator('#seats')).toHaveValue('4');
   await page.fill('#seats', '20');
-  await page.locator('#seats').press('ArrowUp');
-  await pause(40);
-  expect(
-    await page.evaluate(() => document.querySelector('#number-field .cz-number')?.getAnimations().length),
-  ).toBeGreaterThan(0);
-  expect(await page.inputValue('#seats')).toBe('20');
+  const shook = await page.evaluate(() => {
+    const input = document.getElementById('seats') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true }));
+    return document.querySelector('#number-field .cz-number')?.getAnimations().length ?? 0;
+  });
+  expect(shook).toBeGreaterThan(0);
+  await expect(page.locator('#seats')).toHaveValue('20');
 });
 
 test('a code input fills its cells and confirms the right code', async ({ page }) => {
@@ -225,9 +274,7 @@ test('Pebble answers in the chat', async ({ page }) => {
   await scrollTo(page, 'chat');
   await page.fill('#chat-composer textarea', 'Twelve people');
   await page.keyboard.press('Enter');
-  await pause(700);
-  expect(await page.locator('#chat-log .cz-typing').count()).toBe(1);
-  await pause(1500);
+  await expect(page.locator('#chat-log .cz-typing')).toHaveCount(1);
   await expect(page.locator('#chat-log .cz-message')).toHaveCount(5);
 });
 
