@@ -1,0 +1,451 @@
+/*
+ * Button. Solid for the one main action, soft for the rest, ghost in toolbars. Sides are 1.5-2x the top.
+ * Pressing sinks it fast; letting go springs it back with a touch of overshoot.
+ */
+.cz-button {
+  --_h: var(--cz-h-md);
+  --_px: 10px;
+  --_lh: var(--cz-leading);
+  --_fs: var(--cz-text);
+  --_r: var(--cz-radius-md);
+  --_icon: 16px;
+  --_bg: var(--cz-tone-9);
+  --_fg: var(--cz-on-tone);
+  --_hover: var(--cz-tone-10);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--_h);
+  padding: 0 var(--_px);
+  border: 0;
+  border-radius: var(--_r);
+  corner-shape: var(--cz-shape);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-size: var(--_fs);
+  font-weight: var(--cz-w-label);
+  line-height: var(--_lh);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--cz-hover) var(--cz-ease),
+    color var(--cz-hover) var(--cz-ease),
+    scale var(--cz-lively);
+}
+.cz-button svg {
+  flex: none;
+  width: var(--_icon);
+  height: var(--_icon);
+  transition:
+    translate var(--cz-snappy),
+    rotate var(--cz-lively),
+    scale var(--cz-lively);
+}
+.cz-button[data-size="sm"] {
+  --_h: var(--cz-h-sm);
+  --_lh: var(--cz-leading-small);
+  --_fs: var(--cz-small);
+  --_r: var(--cz-radius-sm);
+  --_icon: 14px;
+  gap: 4px;
+}
+.cz-button[data-size="lg"] {
+  --_h: var(--cz-h-lg);
+  --_px: 16px;
+  --_r: var(--cz-radius-lg);
+  --_icon: 18px;
+  gap: 8px;
+}
+.cz-button[data-variant="soft"] {
+  --_bg: var(--cz-tone-soft);
+  --_fg: var(--cz-tone-11);
+  --_hover: var(--cz-tone-soft-hover);
+}
+.cz-button[data-variant="ghost"] {
+  --_bg: transparent;
+  --_fg: var(--cz-tone-11);
+  --_hover: var(--cz-wash);
+}
+.cz-button[data-icon] {
+  width: var(--_h);
+  padding: 0;
+}
+/* data-icon-motion gives the icon a small move on hover: nudge toward where it goes, turn, or tilt. */
+@media (hover: hover) {
+  .cz-button:hover {
+    background: var(--_hover);
+  }
+  .cz-button[data-icon-motion="nudge"]:hover svg:last-child {
+    translate: calc(3px * var(--cz-dir) * var(--cz-travel)) 0;
+  }
+  .cz-button[data-icon-motion="turn"]:hover svg {
+    rotate: calc(90deg * var(--cz-travel));
+  }
+  .cz-button[data-icon-motion="tilt"]:hover svg {
+    rotate: calc(-14deg * var(--cz-travel));
+    scale: calc(1 + 0.08 * var(--cz-travel));
+  }
+}
+.cz-button:focus-visible {
+  background: var(--_hover);
+  scale: var(--cz-lift);
+}
+.cz-button:active {
+  scale: var(--cz-press);
+  transition:
+    background-color var(--cz-hover) var(--cz-ease),
+    color var(--cz-hover) var(--cz-ease),
+    scale var(--cz-press-in) var(--cz-ease);
+}
+.cz-button:disabled,
+.cz-button[aria-disabled="true"]:not([data-state="busy"]) {
+  background: var(--_bg);
+  opacity: 0.45;
+  scale: 1;
+  cursor: not-allowed;
+}
+
+/* Busy and done. The label slides away for a spinner, then a check draws itself in. Set them with setButtonState. */
+.cz-button-label {
+  display: inline-flex;
+  align-items: center;
+  gap: inherit;
+  transition:
+    opacity var(--cz-hover) var(--cz-ease),
+    translate var(--cz-snappy),
+    filter var(--cz-hover) var(--cz-ease);
+}
+.cz-button[data-state="busy"] {
+  pointer-events: none;
+}
+.cz-button[data-state="busy"] .cz-button-label {
+  opacity: 0;
+  translate: 0 calc(-6px * var(--cz-travel));
+  filter: blur(2px);
+}
+/* The spinner is the ::before; a touch screen's larger hit area keeps the ::after. */
+.cz-button[data-state="busy"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: var(--_icon);
+  height: var(--_icon);
+  margin: auto;
+  border-radius: 50%;
+  background: conic-gradient(from 90deg, transparent 0 20%, var(--_fg));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  animation:
+    cz-spin 0.7s linear infinite,
+    cz-fade-in var(--cz-hover) var(--cz-ease) both;
+}
+.cz-button-done {
+  display: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+}
+.cz-button[data-state="done"] .cz-button-done {
+  display: block;
+  animation: cz-draw 320ms var(--cz-ease) 40ms forwards;
+}
+
+/* Link: an inline line that sweeps in from the inline start on hover and leaves toward the end. */
+.cz-link {
+  border-radius: var(--cz-radius-xs);
+  corner-shape: var(--cz-shape);
+  color: var(--cz-tone-11);
+  text-decoration: none;
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(
+      color-mix(in oklab, currentColor 32%, transparent),
+      color-mix(in oklab, currentColor 32%, transparent)
+    );
+  background-position:
+    calc(50% + 50% * var(--cz-dir)) 100%,
+    0 100%;
+  background-size:
+    0% 1px,
+    100% 1px;
+  background-repeat: no-repeat;
+  transition:
+    background-size var(--cz-smooth),
+    background-color var(--cz-hover) var(--cz-ease);
+}
+.cz-link:is(:hover, :focus-visible) {
+  background-position:
+    calc(50% - 50% * var(--cz-dir)) 100%,
+    0 100%;
+  background-size:
+    100% 1px,
+    100% 1px;
+}
+.cz-link:focus-visible {
+  background-color: var(--cz-wash-2);
+}
+
+/* Chip: a small toggle. The ink fill grows from where it was pressed and a check slides in. */
+.cz-chip {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  height: var(--cz-h-sm);
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--cz-radius-sm);
+  corner-shape: var(--cz-shape);
+  background: var(--cz-fill-2);
+  color: var(--cz-ink);
+  font-size: var(--cz-small);
+  line-height: var(--cz-leading-small);
+  cursor: pointer;
+  transition:
+    background-color var(--cz-hover) var(--cz-ease),
+    color var(--cz-hover) var(--cz-ease) 40ms,
+    scale var(--cz-lively);
+}
+/* The fill carries the chip's own corners, so the chip needs no clipping and a touch target can reach past it. */
+.cz-chip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  corner-shape: inherit;
+  background: var(--cz-invert);
+  clip-path: circle(0% at var(--cz-cx, 50%) var(--cz-cy, 50%));
+  transition:
+    clip-path var(--cz-smooth),
+    background-color var(--cz-hover) var(--cz-ease);
+}
+.cz-chip[aria-pressed="true"] {
+  color: var(--cz-on-invert);
+}
+.cz-chip[aria-pressed="true"]::before {
+  clip-path: circle(140% at var(--cz-cx, 50%) var(--cz-cy, 50%));
+}
+.cz-chip-check {
+  flex: none;
+  width: 0;
+  height: 14px;
+  margin-inline-end: 0;
+  opacity: 0;
+  scale: calc(1 - 0.6 * var(--cz-travel));
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    width var(--cz-snappy),
+    margin var(--cz-snappy),
+    opacity var(--cz-hover) var(--cz-ease),
+    scale var(--cz-lively);
+}
+.cz-chip[aria-pressed="true"] .cz-chip-check {
+  width: 14px;
+  margin-inline-end: 4px;
+  opacity: 1;
+  scale: 1;
+}
+.cz-chip > svg:not(.cz-chip-check) {
+  width: 14px;
+  height: 14px;
+  margin-inline-end: 4px;
+}
+@media (hover: hover) {
+  .cz-chip:hover {
+    background: var(--cz-fill-3);
+  }
+  .cz-chip[aria-pressed="true"]:hover::before {
+    background: color-mix(in oklab, var(--cz-invert) 86%, var(--cz-page));
+  }
+}
+.cz-chip:focus-visible {
+  background: var(--cz-fill-3);
+  scale: var(--cz-lift);
+}
+.cz-chip[aria-pressed="true"]:focus-visible::before {
+  background: color-mix(in oklab, var(--cz-invert) 86%, var(--cz-page));
+}
+.cz-chip:active {
+  scale: var(--cz-press);
+  transition:
+    background-color var(--cz-hover) var(--cz-ease),
+    color var(--cz-hover) var(--cz-ease),
+    scale var(--cz-press-in) var(--cz-ease);
+}
+
+/* Toolbar: a row of quiet icon buttons that shares one gliding plate and one tooltip. */
+.cz-toolbar {
+  display: inline-flex;
+  gap: 2px;
+}
+.cz-toolbar > .cz-button {
+  --_hover: transparent;
+}
+.cz-toolbar > .cz-glide {
+  --_glide: var(--cz-wash-2);
+}
+
+@keyframes cz-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+@keyframes cz-fade-in {
+  from {
+    opacity: 0;
+    scale: calc(1 - 0.4 * var(--cz-travel));
+  }
+}
+@keyframes cz-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* A button that opens a menu or popover turns its chevron while it is open. */
+.cz-button .cz-chevron {
+  transition: rotate var(--cz-lively);
+}
+.cz-button[data-open] .cz-chevron {
+  rotate: 180deg;
+}
+
+/*
+ * Theme toggle: a sun that becomes a moon. Its rays fold in one after another, the core grows while a shadow slides
+ * across it, and two stars pop out. Going back, the shadow slides off and the rays burst out again. It reads the
+ * page's data-mode, or the system's mode when none is set, so it is right from the first paint. The rays and stars
+ * are staggered by --cz-index.
+ */
+@property --cz-cut-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 160%;
+}
+@property --cz-cut-y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -60%;
+}
+.cz-theme-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  transition: rotate var(--cz-lively);
+}
+.cz-theme-toggle svg.cz-theme-rays,
+.cz-theme-toggle svg.cz-theme-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.cz-theme-toggle .cz-theme-rays {
+  transition: rotate var(--cz-smooth);
+}
+.cz-theme-rays line {
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  transition:
+    scale var(--cz-lively) calc(150ms + var(--cz-index, 0) * 22ms),
+    opacity 160ms var(--cz-ease) calc(150ms + var(--cz-index, 0) * 22ms);
+}
+.cz-theme-core {
+  --cz-cut-x: 160%;
+  --cz-cut-y: -60%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: currentColor;
+  scale: 0.62;
+  -webkit-mask: radial-gradient(circle 5.5px at var(--cz-cut-x) var(--cz-cut-y), transparent 86%, #000 100%);
+  mask: radial-gradient(circle 5.5px at var(--cz-cut-x) var(--cz-cut-y), transparent 86%, #000 100%);
+  transition:
+    scale var(--cz-lively) 40ms,
+    rotate var(--cz-lively) 40ms,
+    --cz-cut-x 260ms var(--cz-ease),
+    --cz-cut-y 260ms var(--cz-ease);
+}
+.cz-theme-stars path {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  scale: 0;
+  transition:
+    scale 120ms var(--cz-ease-in),
+    opacity 100ms var(--cz-ease-in);
+}
+:root[data-mode="dark"] .cz-theme-rays {
+  rotate: calc(-90deg * var(--cz-travel));
+}
+:root[data-mode="dark"] .cz-theme-rays line {
+  opacity: 0;
+  scale: 0.2;
+  transition:
+    scale 200ms var(--cz-ease-in) calc(var(--cz-index, 0) * 14ms),
+    opacity 150ms var(--cz-ease-in) calc(var(--cz-index, 0) * 14ms);
+}
+:root[data-mode="dark"] .cz-theme-core {
+  --cz-cut-x: 78%;
+  --cz-cut-y: 24%;
+  scale: 1;
+  rotate: calc(-18deg * var(--cz-travel));
+  transition:
+    scale var(--cz-lively) 90ms,
+    rotate var(--cz-lively) 90ms,
+    --cz-cut-x var(--cz-smooth) 130ms,
+    --cz-cut-y var(--cz-smooth) 130ms;
+}
+:root[data-mode="dark"] .cz-theme-stars path {
+  opacity: 1;
+  scale: 1;
+  transition:
+    scale var(--cz-pop) calc(280ms + var(--cz-index, 0) * 110ms),
+    opacity 140ms var(--cz-ease) calc(280ms + var(--cz-index, 0) * 110ms);
+}
+/* With no mode set, the toggle follows the system's. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode]) .cz-theme-rays {
+    rotate: calc(-90deg * var(--cz-travel));
+  }
+  :root:not([data-mode]) .cz-theme-rays line {
+    opacity: 0;
+    scale: 0.2;
+  }
+  :root:not([data-mode]) .cz-theme-core {
+    --cz-cut-x: 78%;
+    --cz-cut-y: 24%;
+    scale: 1;
+    rotate: calc(-18deg * var(--cz-travel));
+  }
+  :root:not([data-mode]) .cz-theme-stars path {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@media (hover: hover) {
+  .cz-theme-toggle:hover .cz-theme-icon {
+    rotate: calc(22deg * var(--cz-travel));
+  }
+  :root[data-mode="dark"] .cz-theme-toggle:hover .cz-theme-icon {
+    rotate: calc(-12deg * var(--cz-travel));
+  }
+}

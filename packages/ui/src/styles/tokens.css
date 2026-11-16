@@ -1,0 +1,132 @@
+/*
+ * Knobs: plain values only, so they inherit safely into any subtree.
+ * Corners come in three modes on any element: data-cz-corners="rounded | squircle | sharp".
+ */
+:root {
+  color-scheme: light dark;
+  interpolate-size: allow-keywords;
+
+  /* Type: compact and light. Two sizes, Inter with optical sizing. */
+  --cz-font:
+    "Inter", "InterVariable", "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cz-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  /* The face for display numbers and headlines; a brand can give its own. */
+  --cz-font-display: var(--cz-font);
+  --cz-text: 14px;
+  --cz-small: 12px;
+  --cz-leading: 20px;
+  --cz-leading-small: 16px;
+  /* The one display size, for a number or a headline that leads a page; never for running text. */
+  --cz-display: 24px;
+  --cz-leading-display: 28px;
+  --cz-w-display: 400;
+  --cz-field-text: var(--cz-text);
+  --cz-w-text: 400;
+  --cz-w-label: 500;
+
+  /* Control heights. Touch screens keep the look and get a bigger hit area. */
+  --cz-h-sm: 28px;
+  --cz-h-md: 32px;
+  --cz-h-lg: 40px;
+
+  /*
+   * Motion. Springs are damped oscillators baked into linear(); the duration is the settle time. The four spring
+   * tokens (--cz-snappy, --cz-smooth, --cz-lively, --cz-pop) live in springs.css, generated from the motion module.
+   */
+  --cz-hover: 140ms;
+  --cz-exit: 130ms;
+  --cz-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --cz-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --cz-press: 0.97;
+  --cz-press-in: 90ms;
+  --cz-lift: 1.03;
+  /* Every distance and size change is multiplied by travel: 1 moves, 0 lands in place and only fades. */
+  --cz-travel: 1;
+  /* 1 left to right, -1 right to left, for the few movements that have a side. */
+  --cz-dir: 1;
+}
+
+[dir="rtl"] {
+  --cz-dir: -1;
+}
+[dir="ltr"] {
+  --cz-dir: 1;
+}
+
+/* iOS zooms into any field under 16 px, so fields grow on touch screens only. */
+@media (pointer: coarse) {
+  :root {
+    --cz-field-text: 16px;
+  }
+}
+
+/* Rounded: circular corners on the house scale, by element height. */
+:root,
+[data-cz-corners="rounded"] {
+  --cz-shape: round;
+  --cz-radius-xs: 4px;
+  --cz-radius-sm: 7px;
+  --cz-radius-md: 11px;
+  --cz-radius-lg: 14px;
+  --cz-radius-xl: 22px;
+}
+
+/* Squircle: continuous superellipse corners, a little larger so the curve can run along the edge. */
+[data-cz-corners="squircle"] {
+  --cz-shape: squircle;
+  --cz-radius-xs: 5px;
+  --cz-radius-sm: 9px;
+  --cz-radius-md: 13px;
+  --cz-radius-lg: 16px;
+  --cz-radius-xl: 28px;
+}
+
+/* Browsers without corner-shape draw the round twin at 0.57 of the radius, which traces the same curve. */
+@supports not (corner-shape: squircle) {
+  [data-cz-corners="squircle"] {
+    --cz-shape: round;
+    --cz-radius-xs: 3px;
+    --cz-radius-sm: 5px;
+    --cz-radius-md: 7px;
+    --cz-radius-lg: 9px;
+    --cz-radius-xl: 16px;
+  }
+}
+
+[data-cz-corners="sharp"] {
+  --cz-shape: round;
+  --cz-radius-xs: 0px;
+  --cz-radius-sm: 0px;
+  --cz-radius-md: 0px;
+  --cz-radius-lg: 0px;
+  --cz-radius-xl: 0px;
+}
+
+[data-mode="light"] {
+  color-scheme: light;
+}
+[data-mode="dark"] {
+  color-scheme: dark;
+}
+
+/* Reduced motion keeps fades and colour and drops travel, scale and overshoot. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --cz-snappy: 120ms ease-out;
+    --cz-smooth: 180ms ease-out;
+    --cz-lively: 120ms ease-out;
+    --cz-pop: 120ms ease-out;
+    --cz-press: 1;
+    --cz-lift: 1;
+    --cz-travel: 0;
+  }
+}
+[data-motion="reduce"] {
+  --cz-snappy: 120ms ease-out;
+  --cz-smooth: 180ms ease-out;
+  --cz-lively: 120ms ease-out;
+  --cz-pop: 120ms ease-out;
+  --cz-press: 1;
+  --cz-lift: 1;
+  --cz-travel: 0;
+}

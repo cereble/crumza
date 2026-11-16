@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="en" data-cz-corners="squircle">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crumza components</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..500&family=Geist+Mono:wght@400..500&display=swap">
+<link rel="stylesheet" href="dist/docs.css">
+<script>
+  // Corners and mode land before the first paint, so the page never flashes.
+  try {
+    const root = document.documentElement;
+    root.dataset.czCorners = localStorage.getItem('cz-corners') || 'squircle';
+    root.dataset.mode = localStorage.getItem('cz-mode') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  } catch {}
+</script>
+</head>
+<body>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 13v5.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V13"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12.5h8L17 7"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.2"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.4l2.5 2.5 4.9-5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.5l8.5 15h-17z"/><path d="M12 10.5v4M12 17.2v.2"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M7 3.5h7l4.5 4.5v12.5H7z"/><path d="M14 3.5V8h4.5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.5 16v-4.5a5.5 5.5 0 0 1 11 0V16l1.5 2h-14z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></symbol>
+</svg>
+
+<header class="doc-top">
+  <div class="doc-brand"><strong>Crumza</strong><span>Components</span></div>
+  <div class="doc-controls">
+    <div class="doc-control">
+      Corners
+      <div class="cz-segmented" role="radiogroup" aria-label="Corners">
+        <label><input type="radio" name="corners" value="rounded">Rounded</label>
+        <label><input type="radio" name="corners" value="squircle">Squircle</label>
+        <label><input type="radio" name="corners" value="sharp">Sharp</label>
+      </div>
+    </div>
+    <button class="cz-button cz-theme-toggle" data-variant="ghost" data-tone="neutral" data-icon type="button" aria-label="Dark mode" aria-pressed="false">
+      <span class="cz-theme-icon" aria-hidden="true">
+        <svg class="cz-theme-rays" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="12" y1="4.5" x2="12" y2="2.2" style="--cz-index: 0"/>
+          <line x1="17.3" y1="6.7" x2="18.93" y2="5.07" style="--cz-index: 1"/>
+          <line x1="19.5" y1="12" x2="21.8" y2="12" style="--cz-index: 2"/>
+          <line x1="17.3" y1="17.3" x2="18.93" y2="18.93" style="--cz-index: 3"/>
+          <line x1="12" y1="19.5" x2="12" y2="21.8" style="--cz-index: 4"/>
+          <line x1="6.7" y1="17.3" x2="5.07" y2="18.93" style="--cz-index: 5"/>
+          <line x1="4.5" y1="12" x2="2.2" y2="12" style="--cz-index: 6"/>
+          <line x1="6.7" y1="6.7" x2="5.07" y2="5.07" style="--cz-index: 7"/>
+        </svg>
+        <span class="cz-theme-core"></span>
+        <svg class="cz-theme-stars" viewBox="0 0 24 24" aria-hidden="true">
+          <path style="--cz-index: 0" d="M19.4 2.6Q19.4 4.6 21.4 4.6Q19.4 4.6 19.4 6.6Q19.4 4.6 17.4 4.6Q19.4 4.6 19.4 2.6Z"/>
+          <path style="--cz-index: 1" d="M21.6 8.8Q21.6 10.2 23 10.2Q21.6 10.2 21.6 11.6Q21.6 10.2 20.2 10.2Q21.6 10.2 21.6 8.8Z"/>
+        </svg>
+      </span>
+    </button>
+  </div>
+</header>
+
+<div class="doc-layout">
+  <nav class="doc-nav" aria-label="Components">
+    <span class="doc-nav-group">Brand</span>
+    <a href="#brand">Brand colours</a>
+    <span class="doc-nav-group">Actions</span>
+    <a href="#button">Button</a>
+    <a href="#link">Links</a>
+    <a href="#chip">Chip</a>
+    <a href="#theme-toggle">Theme toggle</a>
+    <span class="doc-nav-group">Forms</span>
+    <a href="#text-field">Text field</a>
+    <a href="#select">Select</a>
+    <a href="#combobox">Combobox</a>
+    <a href="#checkbox">Checkbox</a>
+    <a href="#radio-group">Radio group</a>
+    <a href="#switch">Switch</a>
+    <a href="#slider">Slider</a>
+    <a href="#number-field">Number field</a>
+    <a href="#code-input">Code input</a>
+    <a href="#segmented">Segmented control</a>
+    <span class="doc-nav-group">Navigation</span>
+    <a href="#tabs">Tabs</a>
+    <a href="#accordion">Accordion</a>
+    <a href="#menu">Menu</a>
+    <a href="#breadcrumbs">Breadcrumbs</a>
+    <a href="#pagination">Pagination</a>
+    <span class="doc-nav-group">Overlays</span>
+    <a href="#popover">Popover</a>
+    <a href="#tooltip">Tooltip</a>
+    <a href="#dialog">Dialog</a>
+    <a href="#sheet">Sheet</a>
+    <a href="#command-palette">Command palette</a>
+    <a href="#context-menu">Context menu</a>
+    <a href="#hover-card">Hover card</a>
+    <a href="#toast">Toast</a>
+    <span class="doc-nav-group">Display</span>
+    <a href="#card">Card</a>
+    <a href="#stat">Stat</a>
+    <a href="#badge">Badge</a>
+    <a href="#avatar">Avatar</a>
+    <a href="#table">Table</a>
+    <a href="#kbd">Kbd</a>
+    <a href="#empty-state">Empty state</a>
+    <span class="doc-nav-group">Feedback</span>
+    <a href="#alert">Alert</a>
+    <a href="#progress">Progress and loading</a>
+    <span class="doc-nav-group">Chat</span>
+    <a href="#chat">Chat</a>
+  </nav>
+
+  <main class="doc-main">
+    <section class="doc-intro">
+      <h1>Components</h1>
+      <p>The Crumza kit, in the Mochi brand until you pick another below. No borders and no shadows: every layer is paper with a little more or less ink in it. Everything moves on real springs: one plate glides between choices and stretches as it goes, overlays grow out of what opened them, small things pop, and keyboard changes land at once.</p>
+      <div class="doc-rules">
+        <span class="cz-badge" data-tone="neutral">Two type sizes</span>
+        <span class="cz-badge" data-tone="neutral">Weights 400 and 500</span>
+        <span class="cz-badge" data-tone="neutral">Corners by height</span>
+        <span class="cz-badge" data-tone="neutral">Springs, not easings</span>
+      </div>
+    </section>
+
+    <!-- Brand -->
+    <section class="doc-section" id="brand">
+      <header><h2>Brand colours</h2><p>Set one colour and every colour follows, live: pages, fills, text, labels and both modes, each kept readable. Try our brands, or pick any colour.</p></header>
+      <div class="doc-row"><span class="doc-caption">Brands</span>
+        <div class="doc-items" id="brand-presets">
+          <button type="button" class="cz-chip" aria-pressed="true" data-brand="">Mochi</button>
+          <button type="button" class="cz-chip" aria-pressed="false" data-brand="#245c46">Crumza</button>
+          <button type="button" class="cz-chip" aria-pressed="false" data-brand="#fe4f05">Playarka</button>
+          <button type="button" class="cz-chip" aria-pressed="false" data-brand="#2b4cac">Stofy</button>
+          <button type="button" class="cz-chip" aria-pressed="false" data-brand="#dcb798">Kidamau</button>
+          <button type="button" class="cz-chip" aria-pressed="false" data-brand="#6c8c76">Dangos</button>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Your own</span>
+        <div class="doc-items">
+          <label class="doc-color"><input type="color" id="brand-primary" value="#66736c">Primary</label>
+          <label class="doc-color"><input type="color" id="brand-danger" value="#94625a">Danger</label>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">The scales it makes</span>
+        <div class="doc-swatches" aria-hidden="true">
+          <span style="background: var(--cz-primary-1)"></span><span style="background: var(--cz-primary-2)"></span><span style="background: var(--cz-primary-3)"></span><span style="background: var(--cz-primary-4)"></span><span style="background: var(--cz-primary-5)"></span><span style="background: var(--cz-primary-6)"></span><span style="background: var(--cz-primary-7)"></span><span style="background: var(--cz-primary-8)"></span><span style="background: var(--cz-primary-9)"></span><span style="background: var(--cz-primary-10)"></span><span style="background: var(--cz-primary-11)"></span><span style="background: var(--cz-primary-12)"></span>
+          <span style="background: var(--cz-neutral-1)"></span><span style="background: var(--cz-neutral-2)"></span><span style="background: var(--cz-neutral-3)"></span><span style="background: var(--cz-neutral-4)"></span><span style="background: var(--cz-neutral-5)"></span><span style="background: var(--cz-neutral-6)"></span><span style="background: var(--cz-neutral-7)"></span><span style="background: var(--cz-neutral-8)"></span><span style="background: var(--cz-neutral-9)"></span><span style="background: var(--cz-neutral-10)"></span><span style="background: var(--cz-neutral-11)"></span><span style="background: var(--cz-neutral-12)"></span>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">In your CSS</span>
+        <pre class="doc-code" id="brand-code">:root {
+  --cz-brand-primary: #66736c;
+}</pre>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Variable</th><th>What it sets</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>--cz-brand-primary</td><td>The brand colour; greys take its hue</td><td>#66736c</td></tr>
+          <tr><td>--cz-brand-secondary, -accent</td><td>More brand colours; otherwise the greys and the primary</td><td></td></tr>
+          <tr><td>--cz-brand-danger, -warning, -success, -info</td><td>Status colours</td><td>Mochi's</td></tr>
+          <tr><td>--cz-brand-paper, -ink</td><td>The brand's own page and text colours</td><td>From the primary</td></tr>
+          <tr><td>--cz-brand-*-dark</td><td>Any of the above for dark mode; otherwise a light tone of each</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Actions -->
+    <section class="doc-section" id="button">
+      <header><h2>Button</h2><p>Starts an action. It sinks fast when pressed and springs back with a touch of overshoot; its icon nudges, turns or tilts on hover.</p></header>
+      <div class="doc-row"><span class="doc-caption">Variants</span>
+        <div class="doc-items">
+          <button type="button" class="cz-button" data-variant="solid">Save changes</button>
+          <button type="button" class="cz-button" data-variant="soft">Preview</button>
+          <button type="button" class="cz-button" data-variant="ghost">Cancel</button>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Tones</span>
+        <div class="doc-items">
+          <button type="button" class="cz-button" data-variant="solid" data-tone="neutral">Publish</button>
+          <button type="button" class="cz-button" data-variant="soft" data-tone="neutral">Duplicate</button>
+          <button type="button" class="cz-button" data-variant="solid" data-tone="danger">Delete</button>
+          <button type="button" class="cz-button" data-variant="soft" data-tone="danger">Remove</button>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Sizes</span>
+        <div class="doc-items">
+          <button type="button" class="cz-button" data-variant="solid" data-size="sm">Small</button>
+          <button type="button" class="cz-button" data-variant="solid">Medium</button>
+          <button type="button" class="cz-button" data-variant="solid" data-size="lg">Large</button>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Icons that move</span>
+        <div class="doc-items">
+          <button type="button" class="cz-button" data-variant="solid" data-icon-motion="turn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>New project</button>
+          <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" data-icon-motion="nudge">Continue<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" data-icon-motion="tilt"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>Notify me</button>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Busy and done (press it)</span>
+        <div class="doc-items">
+          <button type="button" class="cz-button" data-variant="solid" id="save-demo"><span class="cz-button-label"><svg class="cz-button-done" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Save changes</span></span></button>
+          <button type="button" class="cz-button" data-variant="solid" data-state="busy" aria-busy="true"><span class="cz-button-label">Saving</span></button>
+          <button type="button" class="cz-button" data-variant="solid" disabled>Disabled</button>
+          <button type="button" class="cz-button" data-variant="soft" disabled>Disabled</button>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>variant</td><td>solid, soft, ghost</td><td>solid</td></tr>
+          <tr><td>tone</td><td>primary, neutral, danger, success, warning, info</td><td>primary</td></tr>
+          <tr><td>size</td><td>sm 28, md 32, lg 40</td><td>md</td></tr>
+          <tr><td>state</td><td>idle, busy, done; the width springs between labels</td><td>idle</td></tr>
+          <tr><td>motion</td><td>Icon move on hover: nudge, turn, tilt</td><td></td></tr>
+          <tr><td>icon</td><td>Square button; the name goes in aria-label</td><td>false</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="link">
+      <header><h2>Link</h2><p>Goes somewhere. On hover the underline sweeps in from the left and leaves to the right.</p></header>
+      <div class="doc-row"><span class="doc-caption">In text</span>
+        <p>Read the <a class="cz-link" href="#link">pricing guide</a> before you change plans, or <a class="cz-link" href="#link">talk to us</a>.</p>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>href</td><td>Where it goes</td><td></td></tr>
+          <tr><td>render</td><td>The router's link component</td><td>a</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="chip">
+      <header><h2>Chip</h2><p>A small toggle, mostly for filters. The ink fill grows from where you press, and a check slides in.</p></header>
+      <div class="doc-row"><span class="doc-caption">Filters</span>
+        <div class="doc-items" data-chips>
+          <button type="button" class="cz-chip" aria-pressed="true"><svg class="cz-chip-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>All</button>
+          <button type="button" class="cz-chip" aria-pressed="false"><svg class="cz-chip-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Open</button>
+          <button type="button" class="cz-chip" aria-pressed="false"><svg class="cz-chip-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Assigned to me</button>
+          <button type="button" class="cz-chip" aria-pressed="false"><svg class="cz-chip-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Overdue</button>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>pressed</td><td>true, false</td><td>false</td></tr>
+          <tr><td>onPressedChange</td><td>Called with the new state</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="theme-toggle">
+      <header><h2>Theme toggle</h2><p>Switches light and dark. The sun folds its rays in one after another and grows into a moon as a shadow slides across it, then two stars pop out; going back, the rays burst out again. The new theme spreads from the toggle as a soft circle, and every colour lands at once.</p></header>
+      <div class="doc-items">
+        <button class="cz-button cz-theme-toggle" data-variant="ghost" data-tone="neutral" data-icon type="button" aria-label="Dark mode" aria-pressed="false">
+          <span class="cz-theme-icon" aria-hidden="true">
+            <svg class="cz-theme-rays" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="12" y1="4.5" x2="12" y2="2.2" style="--cz-index: 0"/>
+              <line x1="17.3" y1="6.7" x2="18.93" y2="5.07" style="--cz-index: 1"/>
+              <line x1="19.5" y1="12" x2="21.8" y2="12" style="--cz-index: 2"/>
+              <line x1="17.3" y1="17.3" x2="18.93" y2="18.93" style="--cz-index: 3"/>
+              <line x1="12" y1="19.5" x2="12" y2="21.8" style="--cz-index: 4"/>
+              <line x1="6.7" y1="17.3" x2="5.07" y2="18.93" style="--cz-index: 5"/>
+              <line x1="4.5" y1="12" x2="2.2" y2="12" style="--cz-index: 6"/>
+              <line x1="6.7" y1="6.7" x2="5.07" y2="5.07" style="--cz-index: 7"/>
+            </svg>
+            <span class="cz-theme-core"></span>
+            <svg class="cz-theme-stars" viewBox="0 0 24 24" aria-hidden="true">
+              <path style="--cz-index: 0" d="M19.4 2.6Q19.4 4.6 21.4 4.6Q19.4 4.6 19.4 6.6Q19.4 4.6 17.4 4.6Q19.4 4.6 19.4 2.6Z"/>
+              <path style="--cz-index: 1" d="M21.6 8.8Q21.6 10.2 23 10.2Q21.6 10.2 21.6 11.6Q21.6 10.2 20.2 10.2Q21.6 10.2 21.6 8.8Z"/>
+            </svg>
+          </span>
+        </button>
+        <span class="doc-caption">Press it: the whole page switches</span>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>pressed, onPressedChange</td><td>Dark when pressed; it reads the page's mode, so it is right from the first paint</td><td></td></tr>
+          <tr><td>reveal</td><td>The new theme spreads from the toggle as a soft circle</td><td>true</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Forms -->
+    <section class="doc-section" id="text-field">
+      <header><h2>Text field</h2><p>A filled input that deepens on hover and lightens on focus. A wrong value shakes once and its error slides open; fix it and the error folds away.</p></header>
+      <div class="doc-grid">
+        <div class="cz-field">
+          <label class="cz-field-label" for="name-input">Name</label>
+          <input class="cz-input" id="name-input" placeholder="Asha Rao" aria-describedby="name-hint">
+          <span class="cz-field-hint" id="name-hint">As it appears on your card.</span>
+        </div>
+        <div class="cz-field" id="email-field">
+          <label class="cz-field-label" for="email-input">Email</label>
+          <input class="cz-input" id="email-input" type="email" value="asha@" aria-invalid="true" aria-describedby="email-error">
+          <span class="cz-field-reveal"><span class="cz-field-error" id="email-error">Enter a full email address.</span></span>
+        </div>
+        <div class="cz-field">
+          <label class="cz-field-label" for="search-input">Search</label>
+          <span class="cz-input-group">
+            <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+            <input class="cz-input" id="search-input" type="text" placeholder="Projects, people, files">
+            <kbd class="cz-kbd" aria-hidden="true">⌘K</kbd>
+            <button class="cz-input-clear" type="button" aria-label="Clear search"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </span>
+        </div>
+        <div class="cz-field">
+          <label class="cz-field-label" for="company-input">Company</label>
+          <input class="cz-input" id="company-input" value="Cereble" disabled aria-describedby="company-hint">
+          <span class="cz-field-hint" id="company-hint">Set by your workspace.</span>
+        </div>
+        <div class="cz-field">
+          <label class="cz-field-label" for="notes-input">Notes</label>
+          <textarea class="cz-input" id="notes-input" placeholder="Grows with what you write"></textarea>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>label, hint</td><td>Text above and under the field</td><td></td></tr>
+          <tr><td>error</td><td>Slides open under the field, tints it and shakes it once</td><td></td></tr>
+          <tr><td>multiline</td><td>A textarea that grows with its text</td><td>false</td></tr>
+          <tr><td>leading, trailing</td><td>An icon, a key hint or a clear button inside</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="select">
+      <header><h2>Select</h2><p>Picks one option from a list. In Chrome the list grows out of the field and its options settle in one after another; elsewhere it is the system list.</p></header>
+      <div class="doc-narrow">
+        <div class="cz-field">
+          <label class="cz-field-label" for="country-input">Country</label>
+          <span class="cz-select">
+            <select class="cz-input" id="country-input">
+              <option>India</option>
+              <option selected>United States</option>
+              <option>United Arab Emirates</option>
+              <option>Japan</option>
+              <option>Germany</option>
+            </select>
+          </span>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>options</td><td>Value and label pairs</td><td></td></tr>
+          <tr><td>value, onValueChange</td><td>Controlled choice</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="combobox">
+      <header><h2>Combobox</h2><p>Picks from a long list by typing. The list grows out of the field and filters as you type, inking the part that matches; one plate follows the arrow keys and the pointer.</p></header>
+      <div class="doc-narrow">
+        <div class="cz-field">
+          <label class="cz-field-label" for="city-input">City</label>
+          <div class="cz-combobox">
+            <input class="cz-input" id="city-input" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="city-list" placeholder="Search cities" autocomplete="off">
+            <button class="cz-combobox-toggle" type="button" tabindex="-1" aria-label="Show cities"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+          </div>
+          <div class="cz-popover cz-listbox" id="city-list" role="listbox" popover="manual" aria-label="Cities">
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="bengaluru"><span class="cz-option-label">Bengaluru</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="dubai"><span class="cz-option-label">Dubai</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="lisbon"><span class="cz-option-label">Lisbon</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="mumbai"><span class="cz-option-label">Mumbai</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="new-york"><span class="cz-option-label">New York</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="pune"><span class="cz-option-label">Pune</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="san-francisco"><span class="cz-option-label">San Francisco</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="singapore"><span class="cz-option-label">Singapore</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="tokyo"><span class="cz-option-label">Tokyo</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option" role="option" tabindex="-1" aria-selected="false" data-value="zurich"><span class="cz-option-label">Zurich</span><svg class="icon cz-option-check" aria-hidden="true"><use href="#i-check"/></svg></div>
+            <div class="cz-option-empty" hidden>No matching city</div>
+          </div>
+          <span class="cz-field-hint">Try typing san or pu.</span>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>options</td><td>Value and label pairs</td><td></td></tr>
+          <tr><td>value, onValueChange</td><td>The chosen option</td><td></td></tr>
+          <tr><td>filter</td><td>Case-insensitive match anywhere in the label</td><td>contains</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="checkbox">
+      <header><h2>Checkbox</h2><p>Turns one choice on or off. It squeezes under the finger, fills with a little overshoot and draws its tick; unchecking erases it fast.</p></header>
+      <div class="doc-items" data-column>
+        <label class="cz-check"><span class="cz-box"><input type="checkbox" id="select-all"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cz-tick" d="M5 12.5l4.5 4.5L19 7.5"/><path class="cz-dash" d="M6 12h12"/></svg></span>Select all</label>
+        <label class="cz-check"><span class="cz-box"><input type="checkbox" checked><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cz-tick" d="M5 12.5l4.5 4.5L19 7.5"/><path class="cz-dash" d="M6 12h12"/></svg></span><span class="cz-check-text">Email me receipts<small>One email per order.</small></span></label>
+        <label class="cz-check"><span class="cz-box"><input type="checkbox"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cz-tick" d="M5 12.5l4.5 4.5L19 7.5"/><path class="cz-dash" d="M6 12h12"/></svg></span>Text me when an order ships</label>
+        <label class="cz-check"><span class="cz-box"><input type="checkbox" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cz-tick" d="M5 12.5l4.5 4.5L19 7.5"/><path class="cz-dash" d="M6 12h12"/></svg></span>Weekly report (not on this plan)</label>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>checked, onCheckedChange</td><td>Controlled state</td><td></td></tr>
+          <tr><td>indeterminate</td><td>Some of a group is checked</td><td>false</td></tr>
+          <tr><td>description</td><td>A second line at the small size</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="radio-group">
+      <header><h2>Radio group</h2><p>Picks one of a few choices. The dot pops in with a spring; the one it leaves shrinks away. Radios stay round so they never read as checkboxes.</p></header>
+      <fieldset class="doc-items" data-column>
+        <legend class="doc-caption" style="margin-bottom: 10px">Delivery</legend>
+        <label class="cz-check"><span class="cz-box"><input type="radio" name="delivery" checked><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="cz-dot" cx="12" cy="12" r="5.5"/></svg></span><span class="cz-check-text">Standard<small>3 to 5 days, free</small></span></label>
+        <label class="cz-check"><span class="cz-box"><input type="radio" name="delivery"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="cz-dot" cx="12" cy="12" r="5.5"/></svg></span><span class="cz-check-text">Express<small>1 to 2 days</small></span></label>
+        <label class="cz-check"><span class="cz-box"><input type="radio" name="delivery"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="cz-dot" cx="12" cy="12" r="5.5"/></svg></span>Pick up in store</label>
+      </fieldset>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>value, onValueChange</td><td>Controlled choice</td><td></td></tr>
+          <tr><td>orientation</td><td>vertical, horizontal</td><td>vertical</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="switch">
+      <header><h2>Switch</h2><p>Turns a setting on at once. The brand colour sweeps in behind the thumb; the thumb stretches while you hold it and lands with a small overshoot.</p></header>
+      <div class="doc-items" data-column>
+        <!-- biome-ignore lint/a11y/useAriaPropsForRole: a native checkbox exposes its checked state; aria-checked is not allowed on it -->
+        <label class="cz-switch"><input type="checkbox" role="switch" checked>Dark map tiles</label>
+        <!-- biome-ignore lint/a11y/useAriaPropsForRole: a native checkbox exposes its checked state; aria-checked is not allowed on it -->
+        <label class="cz-switch"><input type="checkbox" role="switch">Sounds</label>
+        <!-- biome-ignore lint/a11y/useAriaPropsForRole: a native checkbox exposes its checked state; aria-checked is not allowed on it -->
+        <label class="cz-switch"><input type="checkbox" role="switch" disabled>Beta features</label>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>checked, onCheckedChange</td><td>Controlled state</td><td></td></tr>
+          <tr><td>disabled</td><td>true, false</td><td>false</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="slider">
+      <header><h2>Slider</h2><p>Picks a value from a range. The thumb grows under the finger and a value bubble springs up above it while you drag.</p></header>
+      <div class="doc-narrow" style="gap: 28px; padding-top: 12px">
+        <div class="cz-field">
+          <label class="cz-field-label" for="volume-input">Volume</label>
+          <span class="cz-slider-wrap"><input class="cz-slider" id="volume-input" type="range" min="0" max="100" value="60"><output class="cz-slider-bubble">60</output></span>
+        </div>
+        <div class="cz-field">
+          <label class="cz-field-label" for="guests-input">Guests</label>
+          <span class="cz-slider-wrap"><input class="cz-slider" id="guests-input" type="range" min="1" max="12" step="1" value="4"><output class="cz-slider-bubble">4</output></span>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>min, max, step</td><td>Numbers</td><td>0, 100, 1</td></tr>
+          <tr><td>value, onValueChange</td><td>Controlled value</td><td></td></tr>
+          <tr><td>bubble</td><td>Shows the value while dragging</td><td>true</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="number-field">
+      <header><h2>Number field</h2><p>Steps a number. Holding a stepper repeats, faster the longer you hold; the value rolls to the next number, arrow keys step and Shift steps by ten, and at a limit the field shakes.</p></header>
+      <div class="doc-items" style="gap: 20px">
+        <div class="cz-field">
+          <label class="cz-field-label" for="seats">Seats</label>
+          <div class="cz-number">
+            <button class="cz-number-step" type="button" data-step="down" tabindex="-1" aria-label="Fewer seats"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <input id="seats" type="number" inputmode="numeric" min="1" max="20" step="1" value="3">
+            <button class="cz-number-step" type="button" data-step="up" tabindex="-1" aria-label="More seats"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          </div>
+        </div>
+        <div class="cz-field">
+          <label class="cz-field-label" for="hours">Hours</label>
+          <div class="cz-number">
+            <button class="cz-number-step" type="button" data-step="down" tabindex="-1" aria-label="Fewer hours"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <input id="hours" type="number" inputmode="decimal" min="0" max="40" step="0.5" value="7.5">
+            <button class="cz-number-step" type="button" data-step="up" tabindex="-1" aria-label="More hours"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>min, max, step</td><td>Numbers; decimals follow the step</td><td>-, -, 1</td></tr>
+          <tr><td>value, onValueChange</td><td>Controlled value</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="code-input">
+      <header><h2>Code input</h2><p>Takes a one-time code. Paste and autofill work; each digit pops into its cell; a wrong code shakes and clears, the right one turns green. Try 246810.</p></header>
+      <div class="doc-items">
+        <div class="cz-code" id="code-demo">
+          <input inputmode="numeric" autocomplete="one-time-code" aria-label="Verification code">
+          <span class="cz-code-cell" aria-hidden="true"></span>
+          <span class="cz-code-cell" aria-hidden="true"></span>
+          <span class="cz-code-cell" aria-hidden="true"></span>
+          <span class="cz-code-cell" aria-hidden="true"></span>
+          <span class="cz-code-cell" aria-hidden="true"></span>
+          <span class="cz-code-cell" aria-hidden="true"></span>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>length</td><td>Number of cells</td><td>6</td></tr>
+          <tr><td>onComplete</td><td>Called with the full code</td><td></td></tr>
+          <tr><td>state</td><td>done, error</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="segmented">
+      <header><h2>Segmented control</h2><p>Switches between views of the same thing. One plate glides to the choice, stretching as it travels, and squeezes while pressed.</p></header>
+      <div class="doc-items">
+        <div class="cz-segmented" role="radiogroup" aria-label="Period">
+          <label><input type="radio" name="period">Day</label>
+          <label><input type="radio" name="period" checked>Week</label>
+          <label><input type="radio" name="period">Month</label>
+          <label><input type="radio" name="period">Year</label>
+        </div>
+        <div class="cz-segmented" role="radiogroup" aria-label="Layout">
+          <label><input type="radio" name="layout" checked>List</label>
+          <label><input type="radio" name="layout">Board</label>
+          <label><input type="radio" name="layout">Calendar view</label>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>options</td><td>Value and label pairs</td><td></td></tr>
+          <tr><td>value, onValueChange</td><td>Controlled choice</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Navigation -->
+    <section class="doc-section" id="tabs">
+      <header><h2>Tabs</h2><p>Moves between sections of one page. One plate rests on the chosen tab, follows the pointer and comes back; the panel slides in from the side you moved to. Arrow keys move at once.</p></header>
+      <div>
+        <div class="cz-tabs-list" role="tablist" aria-label="Project">
+          <button type="button" class="cz-tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true">Overview</button>
+          <button type="button" class="cz-tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">Activity</button>
+          <button type="button" class="cz-tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">Members</button>
+          <button type="button" class="cz-tab" role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" tabindex="-1">Settings</button>
+        </div>
+        <div class="cz-tabs-panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1"><p class="cz-card-text">Twelve open tasks, three due this week.</p></div>
+        <div class="cz-tabs-panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden><p class="cz-card-text">Asha moved two tasks to done an hour ago.</p></div>
+        <div class="cz-tabs-panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden><p class="cz-card-text">Five members, two of them guests.</p></div>
+        <div class="cz-tabs-panel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" hidden><p class="cz-card-text">Name, visibility and archive.</p></div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>value, onValueChange</td><td>The chosen tab</td><td></td></tr>
+          <tr><td>activation</td><td>automatic, manual</td><td>automatic</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="accordion">
+      <header><h2>Accordion</h2><p>Shows and hides text. One wash glides over the headers; an item opens on a spring, the one it replaces closes at the same time, and the chevrons turn with them.</p></header>
+      <div class="cz-accordion" data-exclusive style="max-width: 600px">
+        <details open>
+          <summary>What happens to my files when the trial ends?</summary>
+          <div class="cz-accordion-panel"><div class="cz-accordion-body">They stay for 30 days. Pick a plan any time in those 30 days and everything is where you left it.</div></div>
+        </details>
+        <details>
+          <summary>Can I change plans later?</summary>
+          <div class="cz-accordion-panel"><div class="cz-accordion-body">Yes. Changes take effect at once and the price is prorated.</div></div>
+        </details>
+        <details>
+          <summary>Do you offer refunds?</summary>
+          <div class="cz-accordion-panel"><div class="cz-accordion-body">Within 14 days of a payment, no questions asked.</div></div>
+        </details>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>exclusive</td><td>One item open at a time</td><td>false</td></tr>
+          <tr><td>open</td><td>true, false</td><td>false</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="menu">
+      <header><h2>Menu</h2><p>A short list of actions. It grows out of its button, the rows settle in one after another, and one plate glides under the pointer or the arrow keys.</p></header>
+      <div class="doc-items">
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" popovertarget="menu-actions" style="anchor-name: --menu-actions">Actions<svg class="icon cz-chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <div class="cz-popover cz-menu" id="menu-actions" popover role="menu" style="position-anchor: --menu-actions">
+          <button type="button" class="cz-menu-item" role="menuitem"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Rename<span class="cz-menu-hint">⌘R</span></button>
+          <button type="button" class="cz-menu-item" role="menuitem"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Duplicate<span class="cz-menu-hint">⌘D</span></button>
+          <button type="button" class="cz-menu-item" role="menuitem"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</button>
+          <div class="cz-menu-gap" role="none"></div>
+          <button type="button" class="cz-menu-item" role="menuitem" data-tone="danger"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete</button>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>items</td><td>Label, icon, shortcut, tone</td><td></td></tr>
+          <tr><td>onSelect</td><td>Called with the chosen item</td><td></td></tr>
+          <tr><td>side, align</td><td>Where it opens; it flips to stay on screen</td><td>below, start</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="breadcrumbs">
+      <header><h2>Breadcrumbs</h2><p>Where a page sits. Quiet links that ink on hover, small chevrons between them, and the current page in ink.</p></header>
+      <nav class="cz-breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="#breadcrumbs">Workspace</a></li>
+          <li><a href="#breadcrumbs">Billing</a></li>
+          <li><a href="#breadcrumbs">Invoices</a></li>
+          <li><span aria-current="page">Invoice 2041</span></li>
+        </ol>
+      </nav>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>items</td><td>Label and link; the last one is the current page</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="pagination">
+      <header><h2>Pagination</h2><p>Moves through pages. One plate rests on the current page and follows the pointer; the arrows nudge toward where they go and rest at either end.</p></header>
+      <nav class="cz-pagination" aria-label="Pages">
+        <button class="cz-page" type="button" data-step="prev" aria-label="Previous page"><svg class="icon" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
+        <button class="cz-page" type="button" data-page="1">1</button>
+        <button class="cz-page" type="button" data-page="2" aria-current="page">2</button>
+        <button class="cz-page" type="button" data-page="3">3</button>
+        <button class="cz-page" type="button" data-page="4">4</button>
+        <button class="cz-page" type="button" data-page="5">5</button>
+        <span class="cz-page-gap" aria-hidden="true">…</span>
+        <button class="cz-page" type="button" data-page="12">12</button>
+        <button class="cz-page" type="button" data-step="next" aria-label="Next page"><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
+      </nav>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>page, onPageChange</td><td>The current page</td><td></td></tr>
+          <tr><td>count</td><td>How many pages; gaps fill the middle</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Overlays -->
+    <section class="doc-section" id="popover">
+      <header><h2>Popover</h2><p>A small panel tied to a button. It grows from the button's side with a light blur clearing, and leaves quicker than it came.</p></header>
+      <div class="doc-items">
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" popovertarget="share-pop" style="anchor-name: --share-pop"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</button>
+        <div class="cz-popover" id="share-pop" popover style="position-anchor: --share-pop; width: 300px">
+          <strong style="display: block; font-weight: 500">Share this board</strong>
+          <span class="cz-card-text" style="display: block; margin-bottom: 10px">Anyone with the link can view.</span>
+          <div style="display: flex; gap: 6px">
+            <input class="cz-input" value="crumza.com/b/42" aria-label="Link" readonly>
+            <button type="button" class="cz-button" data-variant="solid" data-tone="neutral" data-icon aria-label="Copy link" id="copy-link"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>open, onOpenChange</td><td>Controlled state</td><td></td></tr>
+          <tr><td>side, align</td><td>Where it opens; it flips to stay on screen</td><td>below, start</td></tr>
+          <tr><td>container</td><td>Render inside an element, such as a scaled TV stage</td><td>top layer</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="tooltip">
+      <header><h2>Tooltip</h2><p>Names an icon. A group shares one tooltip: it waits on the first hover, then glides from button to button and morphs its width to each name.</p></header>
+      <div class="doc-items" style="padding-top: 28px">
+        <div class="cz-toolbar" data-tips>
+          <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-icon data-icon-motion="tilt" aria-label="Search" data-tip="Search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></button>
+          <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-icon data-icon-motion="turn" aria-label="New file" data-tip="New file"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-icon aria-label="Copy" data-tip="Copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg></button>
+          <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-icon data-icon-motion="tilt" aria-label="Notifications" data-tip="Notifications"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg></button>
+          <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-icon aria-label="More" data-tip="More actions"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></button>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>content</td><td>A few words</td><td></td></tr>
+          <tr><td>delay</td><td>Wait before the first one shows</td><td>450 ms</td></tr>
+          <tr><td>group</td><td>Neighbours share one tooltip that glides between them</td><td>toolbar</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="dialog">
+      <header><h2>Dialog</h2><p>Asks for a decision. It grows out of the button that opened it over a dimming page, its content settles in, and it shrinks back into that button when it closes.</p></header>
+      <div class="doc-items">
+        <button type="button" class="cz-button" data-variant="soft" data-tone="danger" commandfor="delete-dialog" command="show-modal">Delete project</button>
+        <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" commandfor="delete-dialog" command="show-modal">Open from here</button>
+      </div>
+      <dialog class="cz-dialog" id="delete-dialog" aria-labelledby="delete-title">
+        <form method="dialog" class="cz-dialog-body">
+          <h3 id="delete-title" data-stagger>Delete this project?</h3>
+          <p data-stagger>Its 24 files and all comments go too. You can't undo this.</p>
+          <div class="cz-dialog-actions" data-stagger>
+            <button type="submit" class="cz-button" data-variant="ghost" data-tone="neutral" value="cancel" autofocus>Cancel</button>
+            <button type="submit" class="cz-button" data-variant="solid" data-tone="danger" value="delete">Delete project</button>
+          </div>
+        </form>
+      </dialog>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>open, onOpenChange</td><td>Controlled state</td><td></td></tr>
+          <tr><td>title, description</td><td>Read out when it opens</td><td></td></tr>
+          <tr><td>dismissable</td><td>Escape and a click outside close it</td><td>true</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="sheet">
+      <header><h2>Sheet</h2><p>A panel from the edge of the screen. It slides in on a spring; drag it back to dismiss: it follows your finger, resists past its resting place, the page brightens as it goes, and a quick flick is enough.</p></header>
+      <div class="doc-items">
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" commandfor="sheet-bottom" command="show-modal">Open from the bottom</button>
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" commandfor="sheet-side" command="show-modal">Open from the side</button>
+      </div>
+      <dialog class="cz-sheet" id="sheet-bottom" aria-labelledby="sheet-bottom-title">
+        <span class="cz-sheet-grabber" aria-hidden="true"></span>
+        <div class="cz-sheet-body">
+          <h3 id="sheet-bottom-title">Share invoice 2041</h3>
+          <p>Send a link that opens the invoice, ready to pay.</p>
+          <div class="cz-field"><label class="cz-field-label" for="share-email">Email</label><input class="cz-input" id="share-email" type="email" placeholder="asha@example.com"></div>
+          <div class="cz-dialog-actions">
+            <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" commandfor="sheet-bottom" command="close">Cancel</button>
+            <button type="button" class="cz-button" data-variant="solid" commandfor="sheet-bottom" command="close">Send link</button>
+          </div>
+        </div>
+      </dialog>
+      <dialog class="cz-sheet" data-side="end" id="sheet-side" aria-labelledby="sheet-side-title">
+        <div class="cz-sheet-body">
+          <h3 id="sheet-side-title">Filters</h3>
+          <p>Narrow the invoices down.</p>
+          <!-- biome-ignore lint/a11y/useAriaPropsForRole: a native checkbox exposes its checked state; aria-checked is not allowed on it -->
+          <label class="cz-switch"><input type="checkbox" role="switch" checked>Only unpaid</label>
+          <!-- biome-ignore lint/a11y/useAriaPropsForRole: a native checkbox exposes its checked state; aria-checked is not allowed on it -->
+          <label class="cz-switch"><input type="checkbox" role="switch">Sent this month</label>
+          <div class="cz-dialog-actions">
+            <button type="button" class="cz-button" data-variant="solid" commandfor="sheet-side" command="close">Show 12 invoices</button>
+          </div>
+        </div>
+      </dialog>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>side</td><td>bottom, end</td><td>bottom</td></tr>
+          <tr><td>open, onOpenChange</td><td>Controlled state</td><td></td></tr>
+          <tr><td>dismissable</td><td>Drag, Escape and a click outside close it</td><td>true</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="command-palette">
+      <header><h2>Command palette</h2><p>Searches everything from one box. ⌘K or Ctrl+K opens it anywhere; it grows out of what opened it, the box resizes on a spring as you type, and one plate follows the arrow keys and the pointer.</p></header>
+      <div class="doc-items">
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" commandfor="command" command="show-modal"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Search<kbd class="cz-kbd" data-key="Meta">⌘</kbd><kbd class="cz-kbd" data-key="k">K</kbd></button>
+      </div>
+      <dialog class="cz-command" id="command" aria-label="Command palette">
+        <div class="cz-command-search">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="text" placeholder="Search pages, people and actions" aria-label="Search" autocomplete="off">
+          <kbd class="cz-kbd">Esc</kbd>
+        </div>
+        <div class="cz-command-list" role="listbox" aria-label="Results">
+          <!-- biome-ignore lint/a11y/useSemanticElements: a group of options inside a listbox, which a fieldset cannot be -->
+          <div class="cz-command-group" role="group" aria-labelledby="command-pages">
+            <div class="cz-command-heading" id="command-pages">Pages</div>
+            <div class="cz-command-item" data-value="invoices" data-keywords="billing payments"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Invoices<span class="cz-menu-hint">G I</span></div>
+            <div class="cz-command-item" data-value="projects" data-keywords="boards work"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg>Projects<span class="cz-menu-hint">G P</span></div>
+            <div class="cz-command-item" data-value="members" data-keywords="people team"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Members<span class="cz-menu-hint">G M</span></div>
+          </div>
+          <!-- biome-ignore lint/a11y/useSemanticElements: a group of options inside a listbox, which a fieldset cannot be -->
+          <div class="cz-command-group" role="group" aria-labelledby="command-actions">
+            <div class="cz-command-heading" id="command-actions">Actions</div>
+            <div class="cz-command-item" data-value="new-project" data-keywords="create add"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>New project<span class="cz-menu-hint">⌘N</span></div>
+            <div class="cz-command-item" data-value="invite" data-keywords="add member people"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Invite a member</div>
+            <div class="cz-command-item" data-value="theme" data-keywords="dark light mode"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Switch light and dark</div>
+          </div>
+          <!-- biome-ignore lint/a11y/useSemanticElements: a group of options inside a listbox, which a fieldset cannot be -->
+          <div class="cz-command-group" role="group" aria-labelledby="command-people">
+            <div class="cz-command-heading" id="command-people">People</div>
+            <div class="cz-command-item" data-value="asha" data-keywords="design"><span class="cz-avatar" data-size="xs" aria-hidden="true">A</span>Asha Rao</div>
+            <div class="cz-command-item" data-value="mira" data-keywords="finance"><span class="cz-avatar" data-size="xs" data-tone="info" aria-hidden="true">M</span>Mira Kale</div>
+            <div class="cz-command-item" data-value="jon" data-keywords="sales"><span class="cz-avatar" data-size="xs" data-tone="warning" aria-hidden="true">J</span>Jon Silva</div>
+          </div>
+          <div class="cz-command-empty" hidden>Nothing matches. Try another word.</div>
+        </div>
+        <div class="cz-command-foot">
+          <span><kbd class="cz-kbd">↑</kbd><kbd class="cz-kbd">↓</kbd>to move</span>
+          <span><kbd class="cz-kbd">↵</kbd>to open</span>
+          <span><kbd class="cz-kbd">Esc</kbd>to close</span>
+        </div>
+      </dialog>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>items</td><td>Groups of items with text and keywords</td><td></td></tr>
+          <tr><td>shortcut</td><td>Opens it with ⌘ or Ctrl</td><td>k</td></tr>
+          <tr><td>onSelect</td><td>Called with the chosen item</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="context-menu">
+      <header><h2>Context menu</h2><p>Actions on an area. Right-click, long-press or press the Menu key: the menu opens where the pointer is, grows from that point and flips to stay on screen.</p></header>
+      <!-- biome-ignore lint/a11y/noNoninteractiveTabindex: the board is a focus stop so the Menu key can open its context menu -->
+      <section class="cz-context" data-cz-contextmenu="context-actions" tabindex="0" aria-label="Board, with a context menu">Right-click or long-press anywhere here</section>
+      <div class="cz-popover cz-menu" id="context-actions" popover role="menu">
+        <button type="button" class="cz-menu-item" role="menuitem"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy<span class="cz-menu-hint">⌘C</span></button>
+        <button type="button" class="cz-menu-item" role="menuitem"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Paste<span class="cz-menu-hint">⌘V</span></button>
+        <button type="button" class="cz-menu-item" role="menuitem"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>New card</button>
+        <div class="cz-menu-gap" role="none"></div>
+        <button type="button" class="cz-menu-item" role="menuitem" data-tone="danger"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Clear board</button>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>items</td><td>As in menu</td><td></td></tr>
+          <tr><td>longPress</td><td>Opens on touch after a press</td><td>550 ms</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="hover-card">
+      <header><h2>Hover card</h2><p>A richer preview of a person or a link. It waits a moment, grows out of the link, stays while you move onto it, and shows at once on keyboard focus.</p></header>
+      <p>Assigned to <a class="cz-link" href="#hover-card" data-cz-hovercard="card-asha">Asha Rao</a> on Tuesday.</p>
+      <div class="cz-popover cz-hovercard" id="card-asha" popover="manual">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <span class="cz-avatar" data-size="lg" data-presence role="img" aria-label="Asha Rao">AR</span>
+          <span style="display: grid"><strong style="font-weight: 500">Asha Rao</strong><span class="cz-card-text">Design lead, Pune</span></span>
+        </div>
+        <p class="cz-card-text">Owns billing and the invoice flow. Usually replies within an hour.</p>
+        <div style="display: flex; gap: 6px">
+          <button type="button" class="cz-button" data-variant="solid" data-size="sm">Message</button>
+          <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-size="sm">Profile</button>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>delay</td><td>Wait before it shows</td><td>500 ms</td></tr>
+          <tr><td>grace</td><td>Wait before it leaves</td><td>250 ms</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="toast">
+      <header><h2>Toast</h2><p>A short note after something happens. New ones rise from below and the older ones tuck behind; hover the stack to fan it out, swipe one to the right to throw it away.</p></header>
+      <div class="doc-items">
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" data-toast="Changes saved">Show a toast</button>
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" data-toast="Message archived" data-toast-action="Undo">With an action</button>
+        <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" id="toast-three">Stack three</button>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>message</td><td>One line</td><td></td></tr>
+          <tr><td>action</td><td>A label and what it does</td><td></td></tr>
+          <tr><td>duration</td><td>Time on screen; it pauses while you hover the stack</td><td>4 s</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Display -->
+    <section class="doc-section" id="card">
+      <header><h2>Card</h2><p>Groups related content: a step of tone, with no line and no lift. A card that acts rises a little under the pointer, carries a soft light that follows it, and nudges its arrow.</p></header>
+      <div class="doc-grid">
+        <div class="cz-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span class="cz-card-title">Invoice 2041</span><span class="cz-badge" data-tone="success">Paid</span></div>
+          <p class="cz-card-text">Sent to Asha Rao on 12 November.</p>
+          <div class="cz-card-actions">
+            <button type="button" class="cz-button" data-variant="solid" data-size="sm">Download</button>
+            <button type="button" class="cz-button" data-variant="ghost" data-size="sm" data-tone="neutral">View</button>
+          </div>
+        </div>
+        <a class="cz-card" href="#card">
+          <span style="display: flex; justify-content: space-between; align-items: center"><span class="cz-card-title">Billing</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+          <span class="cz-card-text">Plans, invoices and payment methods.</span>
+        </a>
+        <div class="cz-card">
+          <span class="cz-card-title">Newsletter</span>
+          <span class="cz-card-text">One email a month. No noise.</span>
+          <div style="display: flex; gap: 6px; margin-top: 8px">
+            <input class="cz-input" placeholder="you@example.com" aria-label="Email">
+            <button type="button" class="cz-button" data-variant="solid">Join</button>
+          </div>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>render</td><td>div, a link or a button; links and buttons respond to hover and press</td><td>div</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="stat">
+      <header><h2>Stat</h2><p>A number that leads a dashboard. It counts up the first time it comes into view, its change sits beside it, and its line draws itself in.</p></header>
+      <div class="doc-grid">
+        <div class="cz-stat">
+          <span class="cz-stat-label">Revenue this month</span>
+          <div class="cz-stat-row"><span class="cz-stat-value" data-value="48210" data-prefix="$">$0</span><span class="cz-badge cz-stat-delta" data-tone="success"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>12%</span></div>
+          <svg class="cz-spark" viewBox="0 0 100 36" preserveAspectRatio="none" aria-hidden="true"><path class="cz-spark-area" d="M0 30 L12 26 L25 28 L37 20 L50 22 L62 14 L75 16 L87 9 L100 6 L100 36 L0 36 Z"/><path class="cz-spark-line" pathLength="1" d="M0 30 L12 26 L25 28 L37 20 L50 22 L62 14 L75 16 L87 9 L100 6"/></svg>
+        </div>
+        <div class="cz-stat">
+          <span class="cz-stat-label">Active members</span>
+          <div class="cz-stat-row"><span class="cz-stat-value" data-value="1284">0</span><span class="cz-badge cz-stat-delta" data-tone="success"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>4%</span></div>
+          <svg class="cz-spark" viewBox="0 0 100 36" preserveAspectRatio="none" aria-hidden="true"><path class="cz-spark-area" d="M0 24 L12 25 L25 21 L37 22 L50 18 L62 19 L75 14 L87 15 L100 12 L100 36 L0 36 Z"/><path class="cz-spark-line" pathLength="1" d="M0 24 L12 25 L25 21 L37 22 L50 18 L62 19 L75 14 L87 15 L100 12"/></svg>
+        </div>
+        <div class="cz-stat">
+          <span class="cz-stat-label">Failed payments</span>
+          <div class="cz-stat-row"><span class="cz-stat-value" data-value="2.4" data-places="1" data-suffix="%">0%</span><span class="cz-badge cz-stat-delta" data-tone="danger"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>0.3%</span></div>
+          <svg class="cz-spark" viewBox="0 0 100 36" preserveAspectRatio="none" aria-hidden="true"><path class="cz-spark-area" d="M0 14 L12 16 L25 13 L37 18 L50 17 L62 22 L75 20 L87 25 L100 27 L100 36 L0 36 Z"/><path class="cz-spark-line" pathLength="1" d="M0 14 L12 16 L25 13 L37 18 L50 17 L62 22 L75 20 L87 25 L100 27"/></svg>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>value</td><td>The number; it counts up from zero once in view</td><td></td></tr>
+          <tr><td>change</td><td>A badge with its tone and direction</td><td></td></tr>
+          <tr><td>trend</td><td>Points for the line</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="badge">
+      <header><h2>Badge</h2><p>A short status. New badges pop in; a count bumps and rolls its number when it changes.</p></header>
+      <div class="doc-row"><span class="doc-caption">Soft</span>
+        <div class="doc-items">
+          <span class="cz-badge">New</span>
+          <span class="cz-badge" data-tone="neutral">Draft</span>
+          <span class="cz-badge" data-tone="success">Paid</span>
+          <span class="cz-badge" data-tone="warning">Due soon</span>
+          <span class="cz-badge" data-tone="danger">Overdue</span>
+          <span class="cz-badge" data-tone="info">Synced</span>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Solid</span>
+        <div class="doc-items">
+          <span class="cz-badge" data-variant="solid">New</span>
+          <span class="cz-badge" data-variant="solid" data-tone="neutral">Draft</span>
+          <span class="cz-badge" data-variant="solid" data-tone="success">Paid</span>
+          <span class="cz-badge" data-variant="solid" data-tone="warning">Due soon</span>
+          <span class="cz-badge" data-variant="solid" data-tone="danger">Overdue</span>
+          <span class="cz-badge" data-variant="solid" data-tone="info">Synced</span>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Counts that change</span>
+        <div class="doc-items">
+          <span style="display: inline-flex; align-items: center; gap: 8px">Inbox <span class="cz-count" id="inbox-count">3</span></span>
+          <button type="button" class="cz-button" data-variant="soft" data-tone="neutral" data-size="sm" id="inbox-add" data-icon-motion="turn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>New message</button>
+          <button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-size="sm" id="inbox-read">Mark all read</button>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>variant</td><td>soft, solid</td><td>soft</td></tr>
+          <tr><td>tone</td><td>primary, neutral, success, warning, danger, info</td><td>primary</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="avatar">
+      <header><h2>Avatar</h2><p>A person or a team: a rounded square, never a circle. A group spreads apart under the pointer and lifts the face you are on; one tooltip names them as you move.</p></header>
+      <div class="doc-row"><span class="doc-caption">Sizes</span>
+        <div class="doc-items">
+          <span class="cz-avatar" data-size="xs" aria-label="Asha Rao" role="img">A</span>
+          <span class="cz-avatar" data-size="sm" aria-label="Asha Rao" role="img">AR</span>
+          <span class="cz-avatar" aria-label="Asha Rao" role="img">AR</span>
+          <span class="cz-avatar" data-size="lg" aria-label="Asha Rao" role="img" data-presence>AR</span>
+        </div>
+      </div>
+      <div class="doc-row" style="padding-top: 24px"><span class="doc-caption">Group</span>
+        <div class="cz-avatar-group" data-tips>
+          <span class="cz-avatar" role="img" aria-label="Asha Rao" data-tip="Asha Rao" style="--cz-index: 0">AR</span>
+          <span class="cz-avatar" data-tone="info" role="img" aria-label="Mira Kale" data-tip="Mira Kale" style="--cz-index: 1">MK</span>
+          <span class="cz-avatar" data-tone="warning" role="img" aria-label="Jon Silva" data-tip="Jon Silva" style="--cz-index: 2">JS</span>
+          <span class="cz-avatar" data-tone="success" role="img" aria-label="Dev Iyer" data-tip="Dev Iyer" style="--cz-index: 3">DI</span>
+          <span class="cz-avatar" data-tone="neutral" role="img" aria-label="4 more" data-tip="4 more" style="--cz-index: 4">+4</span>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>size</td><td>xs 20, sm 24, md 32, lg 40</td><td>md</td></tr>
+          <tr><td>src, name</td><td>A photo, or initials from the name</td><td></td></tr>
+          <tr><td>presence</td><td>A breathing dot while online</td><td>false</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="table">
+      <header><h2>Table</h2><p>Rows of data with no rules between them. One wash glides over the row under the pointer; sorting slides the rows to their new places.</p></header>
+      <div class="cz-table-scroll" id="invoices">
+        <table class="cz-table">
+          <thead><tr><th>Invoice</th><th><button type="button" class="cz-table-sort" data-key="customer">Customer<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button></th><th>Status</th><th data-num><button type="button" class="cz-table-sort" data-key="amount" data-num>Amount<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button></th></tr></thead>
+          <tbody>
+            <tr data-customer="Asha Rao" data-amount="1240"><td>2041</td><td>Asha Rao</td><td><span class="cz-badge" data-tone="success">Paid</span></td><td data-num>$1,240.00</td></tr>
+            <tr data-customer="Mira Kale" data-amount="860.5"><td>2040</td><td>Mira Kale</td><td><span class="cz-badge" data-tone="warning">Due soon</span></td><td data-num>$860.50</td></tr>
+            <tr data-customer="Jon Silva" data-amount="3100"><td>2039</td><td>Jon Silva</td><td><span class="cz-badge" data-tone="danger">Overdue</span></td><td data-num>$3,100.00</td></tr>
+            <tr data-customer="Dev Iyer" data-amount="95"><td>2038</td><td>Dev Iyer</td><td><span class="cz-badge" data-tone="neutral">Draft</span></td><td data-num>$95.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>columns</td><td>Label, alignment, sort</td><td></td></tr>
+          <tr><td>striped</td><td>Alternate rows carry a tone</td><td>true</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="kbd">
+      <header><h2>Kbd</h2><p>A key or a shortcut, in mono. Press the key for real and it presses down on the page.</p></header>
+      <div class="doc-items" data-column>
+        <p>Press <kbd class="cz-kbd" data-key="Meta">⌘</kbd> <kbd class="cz-kbd" data-key="k">K</kbd> to search anywhere.</p>
+        <p>Save with <kbd class="cz-kbd" data-key="Meta">⌘</kbd> <kbd class="cz-kbd" data-key="s">S</kbd>, close with <kbd class="cz-kbd" data-key="Escape">Esc</kbd>.</p>
+      </div>
+    </section>
+
+    <section class="doc-section" id="empty-state">
+      <header><h2>Empty state</h2><p>Says what is missing and what to do next. Its parts rise in one after another when it appears.</p></header>
+      <div id="empty-demo" style="max-width: 600px">
+        <div class="cz-empty">
+          <span class="cz-empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></span>
+          <span class="cz-empty-title">No invoices match</span>
+          <span class="cz-empty-text">Nothing was sent to Mira this month. Try another month or clear the filters.</span>
+          <div class="cz-empty-actions"><button type="button" class="cz-button" data-variant="soft" data-tone="neutral" data-size="sm" id="empty-again">Clear filters</button></div>
+        </div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>icon, title, text</td><td>What is missing</td><td></td></tr>
+          <tr><td>actions</td><td>What to do next</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Feedback -->
+    <section class="doc-section" id="alert">
+      <header><h2>Alert</h2><p>A message about the page. Its icon pops when it arrives; dismiss it and it folds away while the rest move up.</p></header>
+      <div class="doc-items" data-column style="align-items: stretch; max-width: 600px" id="alerts">
+        <div class="cz-alert" data-tone="info" role="status"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="cz-alert-title">New sign-in</span><button type="button" class="cz-alert-close" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button><span class="cz-alert-text">You signed in from a new browser in San Jose.</span></div>
+        <div class="cz-alert" data-tone="success" role="status"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg><span class="cz-alert-title">Payment received</span><button type="button" class="cz-alert-close" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button><span class="cz-alert-text">Invoice 2041 is paid. A receipt is on its way.</span></div>
+        <div class="cz-alert" data-tone="warning" role="status"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="cz-alert-title">Storage almost full</span><button type="button" class="cz-alert-close" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button><span class="cz-alert-text">92% used. Uploads stop at 100%.</span></div>
+        <div class="cz-alert" data-tone="danger" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-x-circle"/></svg><span class="cz-alert-title">Card declined</span><button type="button" class="cz-alert-close" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button><span class="cz-alert-text">Your bank declined the charge. Try another card.</span></div>
+      </div>
+      <div class="doc-items"><button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-size="sm" id="alerts-back">Bring them back</button></div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>tone</td><td>info, success, warning, danger</td><td>info</td></tr>
+          <tr><td>title</td><td>A few words</td><td></td></tr>
+          <tr><td>onDismiss</td><td>Shows a close button; the alert folds away</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section" id="progress">
+      <header><h2>Progress and loading</h2><p>How far along something is, or that it is busy. The bar moves on a spring and turns green when it is done; spinners wait a moment so quick loads never flash; skeletons hand over to the real content.</p></header>
+      <div class="doc-row"><span class="doc-caption">Progress</span>
+        <div class="doc-narrow">
+          <div class="cz-progress" role="progressbar" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100" aria-label="Upload" style="--cz-value: 0.24" id="upload"><i></i></div>
+          <div class="cz-progress" role="progressbar" aria-label="Loading" data-indeterminate><i></i></div>
+          <div class="doc-items"><button type="button" class="cz-button" data-variant="soft" data-tone="neutral" data-size="sm" id="upload-start">Start upload</button><span class="doc-value" id="upload-label">24%</span></div>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Spinner</span>
+        <div class="doc-items">
+          <svg class="cz-spinner" viewBox="0 0 24 24" role="status" aria-label="Loading"><circle cx="12" cy="12" r="9"/></svg>
+          <svg class="cz-spinner" data-size="lg" viewBox="0 0 24 24" role="status" aria-label="Loading"><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+      </div>
+      <div class="doc-row"><span class="doc-caption">Skeleton</span>
+        <div class="doc-skeleton-row" id="skeleton-demo">
+          <div class="doc-skeleton-part" data-part="wait" aria-hidden="true">
+            <span class="cz-skeleton" style="width: 32px; height: 32px; border-radius: var(--cz-radius-md)"></span>
+            <span class="doc-skeleton-lines">
+              <span class="cz-skeleton" style="height: 12px; width: 50%"></span>
+              <span class="cz-skeleton" style="height: 12px; width: 85%"></span>
+            </span>
+          </div>
+          <div class="doc-skeleton-part" data-part="ready" hidden>
+            <span class="cz-avatar" role="img" aria-label="Mira Kale">MK</span>
+            <span class="doc-skeleton-lines"><span>Mira Kale</span><span class="cz-card-text">Moved three tasks to done.</span></span>
+          </div>
+        </div>
+        <div class="doc-items"><button type="button" class="cz-button" data-variant="ghost" data-tone="neutral" data-size="sm" id="skeleton-load">Load again</button></div>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>value</td><td>0 to 100; leave it out while unknown</td><td></td></tr>
+          <tr><td>label</td><td>What is loading, read out to screen readers</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Chat -->
+    <section class="doc-section" id="chat">
+      <header><h2>Chat</h2><p>Messages, a typing indicator and a composer, for agents like Dangos. Messages from one side group with tighter inner corners and rise in from their side; the dots wave while the other side types; the send button wakes up once there is text, and Enter sends.</p></header>
+      <div class="doc-chat" data-cz-surface>
+        <div class="cz-chat" id="chat-log" role="log" aria-live="polite" aria-label="Conversation with Pebble">
+          <div class="cz-message" data-from="them"><span class="cz-sr">Pebble: </span>Hi, I am Pebble. Looking for a plan that fits your team?</div>
+          <div class="cz-message" data-from="them"><span class="cz-sr">Pebble: </span>Tell me how many people will use it.</div>
+          <div class="cz-message" data-from="me"><span class="cz-sr">You: </span>About twelve, maybe more by spring.</div>
+        </div>
+        <form class="cz-composer" id="chat-composer">
+          <textarea rows="1" placeholder="Write a message" aria-label="Message"></textarea>
+          <button class="cz-button" data-variant="solid" data-icon type="submit" aria-label="Send" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg></button>
+        </form>
+      </div>
+      <table class="cz-table doc-props">
+        <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>from</td><td>me, them; messages from one side group</td><td></td></tr>
+          <tr><td>onSend</td><td>Called with the text; Enter sends, Shift+Enter starts a line</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<ol class="cz-toaster" aria-live="polite"></ol>
+<script src="dist/docs.js"></script>
+</body>
+</html>

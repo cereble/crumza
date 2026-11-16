@@ -1,0 +1,98 @@
+/*
+ * Shared moving parts. The plate is one object for hover and selection: it glides between items and
+ * stretches on the way. Springs drive its edges from the motion module.
+ */
+.cz-glide-host {
+  position: relative;
+  isolation: isolate;
+}
+.cz-glide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 0;
+  height: 0;
+  border-radius: var(--_glide-radius, var(--cz-radius-md));
+  corner-shape: var(--cz-shape);
+  background: var(--_glide, var(--cz-wash-2));
+  opacity: 0;
+  pointer-events: none;
+  /* Its size changes every frame while it travels; containment keeps that from reaching the page's layout. */
+  contain: strict;
+  transition:
+    opacity var(--cz-hover) var(--cz-ease),
+    scale var(--cz-lively),
+    background-color var(--cz-hover) var(--cz-ease);
+}
+.cz-glide[data-shown] {
+  opacity: 1;
+}
+/* Focus deepens the plate, so a focused choice reads apart from a chosen one. */
+.cz-glide-host:has(:focus-visible) > .cz-glide {
+  background: color-mix(in oklab, var(--cz-ink) 9%, var(--_glide, var(--cz-wash-2)));
+}
+.cz-glide[data-pressed] {
+  scale: calc(1 - 0.04 * var(--cz-travel));
+  transition:
+    opacity var(--cz-hover) var(--cz-ease),
+    scale var(--cz-press-in) var(--cz-ease),
+    background-color var(--cz-hover) var(--cz-ease);
+}
+/* Over a striped table or a tinted card the plate sits on top as a wash. */
+.cz-glide.cz-glide-over {
+  z-index: 2;
+}
+
+/* The group tooltip: one inverted label that follows the pointer from item to item. */
+.cz-tip-host {
+  position: relative;
+}
+.cz-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  height: 24px;
+  overflow: hidden;
+  border-radius: var(--cz-radius-sm);
+  corner-shape: var(--cz-shape);
+  background: var(--cz-invert);
+  color: var(--cz-on-invert);
+  font-size: var(--cz-small);
+  font-weight: var(--cz-w-label);
+  line-height: var(--cz-leading-small);
+  white-space: nowrap;
+  opacity: 0;
+  scale: calc(1 - 0.1 * var(--cz-travel));
+  transform-origin: bottom center;
+  pointer-events: none;
+  transition:
+    opacity var(--cz-exit) var(--cz-ease-in),
+    scale var(--cz-exit) var(--cz-ease-in);
+}
+/* A shown tip takes the pointer, so it can be hovered and read. */
+.cz-tip[data-shown] {
+  opacity: 1;
+  scale: 1;
+  pointer-events: auto;
+  transition:
+    opacity var(--cz-hover) var(--cz-ease),
+    scale var(--cz-lively);
+}
+.cz-tip-label {
+  display: inline-block;
+  padding: 0 8px;
+}
+
+/* A number that rolls to its next value. */
+.cz-roll {
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.cz-roll > * {
+  grid-area: 1 / 1;
+}

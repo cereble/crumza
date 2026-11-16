@@ -1,0 +1,250 @@
+/*
+ * Tabs: navigation at the text size. One plate rests on the chosen tab, follows the pointer, stretches as it
+ * travels and comes back when the pointer leaves. The panel slides in from the side the choice moved to.
+ */
+.cz-tabs-list {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+.cz-tabs-list > .cz-glide {
+  --_glide: var(--cz-fill-2);
+  --_glide-radius: var(--cz-radius-md);
+}
+.cz-tab {
+  position: relative;
+  height: var(--cz-h-md);
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--cz-radius-md);
+  corner-shape: var(--cz-shape);
+  background: transparent;
+  color: var(--cz-ink-2);
+  font-size: var(--cz-text);
+  font-weight: var(--cz-w-label);
+  line-height: var(--cz-leading);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--cz-hover) var(--cz-ease),
+    background-color var(--cz-hover) var(--cz-ease),
+    scale var(--cz-lively);
+}
+.cz-tab[aria-selected="true"] {
+  background: var(--cz-fill-2);
+  color: var(--cz-ink);
+}
+.cz-tabs-list[data-glide] > .cz-tab {
+  background: transparent;
+}
+@media (hover: hover) {
+  .cz-tab:hover {
+    color: var(--cz-ink);
+  }
+}
+.cz-tab:focus-visible {
+  color: var(--cz-ink);
+}
+.cz-tab:active {
+  scale: var(--cz-press);
+  transition:
+    color var(--cz-hover) var(--cz-ease),
+    scale var(--cz-press-in) var(--cz-ease);
+}
+.cz-tabs-panel {
+  padding-block-start: 12px;
+}
+.cz-tabs-panel[hidden] {
+  display: none;
+}
+
+/*
+ * Accordion: tonal items. One wash glides over the headers; an item opens on a spring, closes quicker, and
+ * its chevron turns with it.
+ */
+.cz-accordion {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 4px;
+}
+.cz-accordion > .cz-glide {
+  --_glide: var(--cz-wash);
+  --_glide-radius: var(--cz-radius-lg);
+}
+.cz-accordion > details {
+  border-radius: var(--cz-radius-lg);
+  corner-shape: var(--cz-shape);
+  background: var(--cz-fill-1);
+  transition: background-color var(--cz-smooth);
+}
+.cz-accordion > details[open] {
+  background: var(--cz-fill-2);
+}
+.cz-accordion summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: var(--cz-h-lg);
+  padding: 0 16px;
+  border-radius: var(--cz-radius-lg);
+  corner-shape: var(--cz-shape);
+  list-style: none;
+  cursor: pointer;
+  transition: background-color var(--cz-hover) var(--cz-ease);
+}
+.cz-accordion summary::-webkit-details-marker {
+  display: none;
+}
+.cz-accordion summary::after {
+  content: "";
+  flex: none;
+  width: 14px;
+  height: 14px;
+  background: var(--cz-ink-2);
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  transition: rotate var(--cz-lively);
+}
+.cz-accordion details[open] > summary::after,
+.cz-accordion details[data-opening] > summary::after {
+  rotate: 180deg;
+}
+.cz-accordion details[data-closing] > summary::after {
+  rotate: 0deg;
+}
+.cz-accordion summary:focus-visible {
+  background: var(--cz-wash-2);
+}
+.cz-accordion-panel {
+  overflow: hidden;
+}
+.cz-accordion-body {
+  padding: 0 16px 14px;
+  color: var(--cz-ink-2);
+}
+
+/* Pagination: one plate rests on the current page and follows the pointer; the arrows nudge toward where they go. */
+.cz-pagination {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+}
+.cz-pagination > .cz-glide {
+  --_glide: var(--cz-fill-2);
+  --_glide-radius: var(--cz-radius-md);
+}
+.cz-page {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--cz-h-md);
+  height: var(--cz-h-md);
+  padding: 0 9px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: var(--cz-radius-md);
+  corner-shape: var(--cz-shape);
+  background: transparent;
+  color: var(--cz-ink-2);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--cz-leading);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--cz-hover) var(--cz-ease),
+    scale var(--cz-lively);
+}
+.cz-page[aria-current="page"] {
+  background: var(--cz-fill-2);
+  color: var(--cz-ink);
+}
+.cz-pagination[data-glide] > .cz-page {
+  background: transparent;
+}
+.cz-page:is(:hover, :focus-visible) {
+  color: var(--cz-ink);
+}
+.cz-page:active {
+  scale: var(--cz-press);
+  transition:
+    color var(--cz-hover) var(--cz-ease),
+    scale var(--cz-press-in) var(--cz-ease);
+}
+.cz-page:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.cz-page svg {
+  width: 16px;
+  height: 16px;
+  transition: translate var(--cz-snappy);
+}
+.cz-page[data-step="prev"]:is(:hover, :focus-visible):not(:disabled) svg {
+  translate: calc(-2px * var(--cz-dir) * var(--cz-travel)) 0;
+}
+.cz-page[data-step="next"]:is(:hover, :focus-visible):not(:disabled) svg {
+  translate: calc(2px * var(--cz-dir) * var(--cz-travel)) 0;
+}
+/* On a right-to-left page the arrows point the other way. */
+.cz-page[data-step]:dir(rtl) svg {
+  scale: -1 1;
+}
+.cz-page-gap {
+  min-width: 20px;
+  color: var(--cz-ink-2);
+  text-align: center;
+}
+
+/* Breadcrumbs: quiet links that ink on hover, separated by small chevrons; the current page is ink. */
+.cz-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cz-breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--cz-ink-2);
+}
+.cz-breadcrumbs li + li::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: var(--cz-ink-3);
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+.cz-breadcrumbs li + li:dir(rtl)::before {
+  scale: -1 1;
+}
+.cz-breadcrumbs a {
+  margin-inline: -4px;
+  padding: 2px 4px;
+  border-radius: var(--cz-radius-xs);
+  corner-shape: var(--cz-shape);
+  color: var(--cz-ink-2);
+  text-decoration: none;
+  transition:
+    color var(--cz-hover) var(--cz-ease),
+    background-color var(--cz-hover) var(--cz-ease);
+}
+.cz-breadcrumbs a:is(:hover, :focus-visible) {
+  background: var(--cz-wash);
+  color: var(--cz-ink);
+}
+.cz-breadcrumbs [aria-current="page"] {
+  color: var(--cz-ink);
+}

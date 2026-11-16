@@ -1,0 +1,13 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.admin/
+# A frozen brand exploration from 2026-11-13, kept on this machine only.
+apps/brand-lab/
+.env
+.env.*
+!.env.example
+*.tgz
+*.log
+.DS_Store

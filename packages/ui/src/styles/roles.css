@@ -1,0 +1,128 @@
+/*
+ * Roles. No borders and no shadows: layers separate by tone alone, as paper with more or less ink in it.
+ * Ink is dark in light mode and light in dark mode, so the same mixes read as depth in both.
+ * Roles are restated where a brand scope starts (the root, [data-cz-theme], or an element whose style sets a
+ * --cz-brand-* variable), so a subtree can carry another brand. A subtree in the other mode needs nothing:
+ * light-dark() resolves where a colour is used, by that element's scheme.
+ */
+:where(:root, [data-cz-theme], [style*="--cz-brand-"]) {
+  --cz-page: var(--cz-neutral-1);
+  --cz-ink: var(--cz-neutral-12);
+  --cz-ink-2: var(--cz-neutral-11);
+  --cz-ink-3: var(--cz-neutral-8);
+
+  --cz-fill-1: color-mix(in oklab, var(--cz-ink) 4%, var(--cz-page));
+  --cz-fill-2: color-mix(in oklab, var(--cz-ink) 8%, var(--cz-page));
+  --cz-fill-3: color-mix(in oklab, var(--cz-ink) 12%, var(--cz-page));
+  --cz-fill-4: color-mix(in oklab, var(--cz-ink) 19%, var(--cz-page));
+  --cz-wash: color-mix(in oklab, var(--cz-ink) 6%, transparent);
+  --cz-wash-2: color-mix(in oklab, var(--cz-ink) 10%, transparent);
+
+  /* The lighter plate that marks a choice on a track. */
+  --cz-plate: light-dark(#ffffff, color-mix(in oklab, var(--cz-ink) 19%, var(--cz-page)));
+
+  /* Fields: filled, darker on hover, lighter on focus. */
+  --cz-field: var(--cz-fill-2);
+  --cz-field-hover: var(--cz-fill-3);
+  --cz-field-focus: light-dark(
+    color-mix(in oklab, var(--cz-ink) 2.5%, var(--cz-page)),
+    color-mix(in oklab, var(--cz-ink) 14%, var(--cz-page))
+  );
+
+  /* Floating layers: an opaque tint, never a shadow. */
+  --cz-overlay: color-mix(in oklab, var(--cz-ink) 9%, var(--cz-page));
+  --cz-dialog: light-dark(var(--cz-page), color-mix(in oklab, var(--cz-ink) 7%, var(--cz-page)));
+  --cz-scrim: light-dark(color-mix(in oklab, var(--cz-neutral-12) 28%, transparent), rgb(0 0 0 / 0.55));
+  --cz-invert: var(--cz-ink);
+  --cz-on-invert: var(--cz-page);
+  --cz-selection: color-mix(in oklab, var(--cz-primary-9) 26%, transparent);
+  --cz-placeholder: var(--cz-ink-2);
+
+  color: var(--cz-ink);
+}
+
+/* Text colour is inherited already resolved, so a subtree in the other mode restates it. */
+:where([data-mode]) {
+  color: var(--cz-ink);
+}
+
+/* Surfaces hold their fields a step deeper than themselves, so a field always reads on what it sits on. */
+.cz-card,
+[data-cz-surface] {
+  --cz-field: var(--cz-fill-3);
+  --cz-field-hover: var(--cz-fill-4);
+  --cz-field-focus: light-dark(var(--cz-page), color-mix(in oklab, var(--cz-ink) 18%, var(--cz-page)));
+  --cz-placeholder: color-mix(in oklab, var(--cz-ink-2) 72%, var(--cz-ink));
+}
+.cz-popover {
+  --cz-field: color-mix(in oklab, var(--cz-ink) 16%, var(--cz-page));
+  --cz-field-hover: color-mix(in oklab, var(--cz-ink) 20%, var(--cz-page));
+  --cz-field-focus: light-dark(var(--cz-page), color-mix(in oklab, var(--cz-ink) 24%, var(--cz-page)));
+  --cz-placeholder: color-mix(in oklab, var(--cz-ink-2) 72%, var(--cz-ink));
+}
+/* A dialog is paper in light mode and a tint in dark mode; its fields follow. */
+.cz-dialog {
+  --cz-field: light-dark(var(--cz-fill-2), color-mix(in oklab, var(--cz-ink) 15%, var(--cz-page)));
+  --cz-field-hover: light-dark(var(--cz-fill-3), color-mix(in oklab, var(--cz-ink) 19%, var(--cz-page)));
+  --cz-field-focus: light-dark(
+    color-mix(in oklab, var(--cz-ink) 2.5%, var(--cz-page)),
+    color-mix(in oklab, var(--cz-ink) 23%, var(--cz-page))
+  );
+}
+
+/* Tone: components read --cz-tone-*; data-tone points it at a colour. Primary is the default.
+ * Soft fills sit a step deeper on bright paper than on dark paper, so they read the same in both modes. */
+:where(:root, [data-cz-theme], [style*="--cz-brand-"], [data-tone="primary"]) {
+  --cz-tone-soft: light-dark(var(--cz-primary-4), var(--cz-primary-3));
+  --cz-tone-soft-hover: light-dark(var(--cz-primary-5), var(--cz-primary-4));
+  --cz-tone-9: var(--cz-primary-9);
+  --cz-tone-10: var(--cz-primary-10);
+  --cz-tone-11: var(--cz-primary-11);
+  --cz-on-tone: var(--cz-on-primary);
+}
+/* A brand scope inside a toned subtree keeps that tone. Neutral actions are ink on paper. */
+[data-tone="neutral"],
+:where([data-tone="neutral"]) :is([data-cz-theme], [style*="--cz-brand-"]) {
+  --cz-tone-soft: var(--cz-fill-2);
+  --cz-tone-soft-hover: var(--cz-fill-3);
+  --cz-tone-9: var(--cz-ink);
+  --cz-tone-10: color-mix(in oklab, var(--cz-ink) 86%, var(--cz-page));
+  --cz-tone-11: var(--cz-ink);
+  --cz-on-tone: var(--cz-page);
+}
+[data-tone="danger"],
+:where([data-tone="danger"]) :is([data-cz-theme], [style*="--cz-brand-"]) {
+  --cz-tone-soft: light-dark(var(--cz-danger-4), var(--cz-danger-3));
+  --cz-tone-soft-hover: light-dark(var(--cz-danger-5), var(--cz-danger-4));
+  --cz-tone-9: var(--cz-danger-9);
+  --cz-tone-10: var(--cz-danger-10);
+  --cz-tone-11: var(--cz-danger-11);
+  --cz-on-tone: var(--cz-on-danger);
+}
+[data-tone="warning"],
+:where([data-tone="warning"]) :is([data-cz-theme], [style*="--cz-brand-"]) {
+  --cz-tone-soft: light-dark(var(--cz-warning-4), var(--cz-warning-3));
+  --cz-tone-soft-hover: light-dark(var(--cz-warning-5), var(--cz-warning-4));
+  --cz-tone-9: var(--cz-warning-9);
+  --cz-tone-10: var(--cz-warning-10);
+  --cz-tone-11: var(--cz-warning-11);
+  --cz-on-tone: var(--cz-on-warning);
+}
+[data-tone="success"],
+:where([data-tone="success"]) :is([data-cz-theme], [style*="--cz-brand-"]) {
+  --cz-tone-soft: light-dark(var(--cz-success-4), var(--cz-success-3));
+  --cz-tone-soft-hover: light-dark(var(--cz-success-5), var(--cz-success-4));
+  --cz-tone-9: var(--cz-success-9);
+  --cz-tone-10: var(--cz-success-10);
+  --cz-tone-11: var(--cz-success-11);
+  --cz-on-tone: var(--cz-on-success);
+}
+[data-tone="info"],
+:where([data-tone="info"]) :is([data-cz-theme], [style*="--cz-brand-"]) {
+  --cz-tone-soft: light-dark(var(--cz-info-4), var(--cz-info-3));
+  --cz-tone-soft-hover: light-dark(var(--cz-info-5), var(--cz-info-4));
+  --cz-tone-9: var(--cz-info-9);
+  --cz-tone-10: var(--cz-info-10);
+  --cz-tone-11: var(--cz-info-11);
+  --cz-on-tone: var(--cz-on-info);
+}

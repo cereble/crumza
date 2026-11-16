@@ -1,0 +1,125 @@
+/*
+ * Forced colours (Windows High Contrast and similar). The system replaces every fill with its own colours, so
+ * layers that separate by tone would melt together. Here only, surfaces and controls draw a hairline in the
+ * system's text colour, choices and checked states take the system highlight, and focus is a ring.
+ */
+@media (forced-colors: active) {
+  :where(
+    .cz-button,
+    .cz-chip,
+    .cz-input,
+    .cz-segmented,
+    .cz-number,
+    .cz-code-cell,
+    .cz-composer,
+    .cz-select > select,
+    .cz-toast-action,
+    .cz-input-clear
+  ) {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+  :where(
+    .cz-card,
+    .cz-alert,
+    .cz-badge,
+    .cz-count,
+    .cz-stat,
+    .cz-empty,
+    .cz-context,
+    .cz-accordion > details,
+    .cz-kbd,
+    .cz-avatar,
+    .cz-skeleton,
+    .cz-message,
+    .cz-typing,
+    .cz-progress,
+    .cz-toast,
+    .cz-tip,
+    .cz-slider-bubble,
+    .cz-popover,
+    .cz-dialog,
+    .cz-sheet,
+    .cz-command
+  ) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  /* The plate marks hover and choice with a ring instead of a tint. */
+  .cz-glide {
+    background: transparent;
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+  /* Without the plate (no script), the chosen item rings itself. */
+  .cz-tab[aria-selected="true"],
+  .cz-page[aria-current="page"],
+  .cz-segmented > label:has(:checked),
+  .cz-option[aria-selected="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  /* Checked controls fill with the highlight and draw their mark in its text colour. */
+  .cz-chip[aria-pressed="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+  .cz-chip::before {
+    display: none;
+  }
+  .cz-box > input,
+  .cz-switch > input {
+    forced-color-adjust: none;
+    background: Canvas;
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+  .cz-box > input:is(:checked, :indeterminate),
+  .cz-switch > input:checked {
+    background: Highlight;
+    outline-color: Highlight;
+  }
+  .cz-box > svg {
+    forced-color-adjust: none;
+    stroke: HighlightText;
+  }
+  .cz-box .cz-dot {
+    fill: HighlightText;
+  }
+  .cz-switch > input::after {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+  .cz-switch > input:checked::after {
+    background: HighlightText;
+  }
+  .cz-progress > i,
+  .cz-slider-bubble {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+  /* Gradients are dropped here, so the busy spinner draws its arc in the button's text colour itself. */
+  .cz-button[data-state="busy"]::before {
+    forced-color-adjust: none;
+    background: conic-gradient(from 90deg, transparent 0 20%, ButtonText);
+  }
+  :is(.cz-button, .cz-chip, .cz-page, .cz-number-step):disabled,
+  .cz-button[aria-disabled="true"] {
+    color: GrayText;
+    outline-color: GrayText;
+  }
+
+  /* Focus is a ring here, on whatever shows it: the control, or the cell or label that stands in for it. */
+  :focus-visible,
+  .cz-segmented > label:has(:focus-visible),
+  .cz-code[data-focus] .cz-code-cell[data-active] {
+    /* biome-ignore lint/complexity/noImportantStyles: focus must show in forced colours, whatever a control sets */
+    outline: 2px solid Highlight !important;
+    /* biome-ignore lint/complexity/noImportantStyles: as above */
+    outline-offset: 2px !important;
+  }
+}

@@ -1,0 +1,17 @@
+/* Crumza: one stylesheet. Layers keep every app rule above the kit. */
+@layer crumza.tokens, crumza.base, crumza.components;
+
+/* Springs first, so the reduced-motion overrides in tokens.css win over them. */
+@import url("springs.css") layer(crumza.tokens);
+@import url("tokens.css") layer(crumza.tokens);
+@import url("brand.css") layer(crumza.tokens);
+@import url("roles.css") layer(crumza.tokens);
+@import url("base.css") layer(crumza.base);
+@import url("motion.css") layer(crumza.components);
+@import url("actions.css") layer(crumza.components);
+@import url("forms.css") layer(crumza.components);
+@import url("navigation.css") layer(crumza.components);
+@import url("overlays.css") layer(crumza.components);
+@import url("display.css") layer(crumza.components);
+@import url("chat.css") layer(crumza.components);
+@import url("forced-colors.css") layer(crumza.components);

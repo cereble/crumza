@@ -1,0 +1,281 @@
+@import "@crumza/ui/crumza.css";
+
+/* The documentation page. It uses only the kit's roles, sizes, corners and motion. */
+.icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.doc-top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 24px;
+  padding: 10px 24px;
+  background: color-mix(in oklab, var(--cz-page) 88%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+.doc-brand {
+  display: flex;
+  gap: 8px;
+}
+.doc-brand strong {
+  font-weight: var(--cz-w-label);
+}
+.doc-brand span {
+  color: var(--cz-ink-2);
+}
+.doc-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  margin-left: auto;
+}
+.doc-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cz-ink-2);
+}
+
+.doc-layout {
+  display: grid;
+  grid-template-columns: 196px minmax(0, 1fr);
+  gap: 56px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 24px 160px;
+}
+.doc-nav {
+  position: sticky;
+  top: 68px;
+  align-self: start;
+  display: grid;
+  gap: 1px;
+  max-height: calc(100vh - 88px);
+  overflow: auto;
+  scrollbar-width: none;
+}
+.doc-nav > .cz-glide {
+  --_glide: var(--cz-fill-2);
+  --_glide-radius: var(--cz-radius-md);
+}
+.doc-nav-group {
+  padding: 16px 10px 4px;
+  color: var(--cz-ink-2);
+  font-size: var(--cz-small);
+  line-height: var(--cz-leading-small);
+}
+.doc-nav-group:first-of-type {
+  padding-top: 0;
+}
+.doc-nav a {
+  display: flex;
+  align-items: center;
+  height: var(--cz-h-md);
+  padding: 0 10px;
+  border-radius: var(--cz-radius-md);
+  corner-shape: var(--cz-shape);
+  color: var(--cz-ink-2);
+  line-height: var(--cz-leading);
+  text-decoration: none;
+  transition: color var(--cz-hover) var(--cz-ease);
+}
+.doc-nav a:is(:hover, :focus-visible, [aria-current="true"]) {
+  color: var(--cz-ink);
+}
+
+.doc-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 72px;
+  min-width: 0;
+}
+.doc-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  max-width: 600px;
+}
+.doc-intro p {
+  color: var(--cz-ink-2);
+}
+.doc-rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.doc-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  scroll-margin-top: 76px;
+}
+.doc-section > header {
+  display: grid;
+  gap: 4px;
+  max-width: 600px;
+}
+.doc-section > header p {
+  color: var(--cz-ink-2);
+}
+.doc-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+.doc-caption {
+  color: var(--cz-ink-2);
+  font-size: var(--cz-small);
+  line-height: var(--cz-leading-small);
+}
+.doc-items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.doc-items[data-column] {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.doc-narrow {
+  display: grid;
+  gap: 14px;
+  max-width: 360px;
+}
+.doc-color {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.doc-color input {
+  width: var(--cz-h-sm);
+  height: var(--cz-h-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--cz-radius-sm);
+  corner-shape: var(--cz-shape);
+  background: none;
+  cursor: pointer;
+  transition: scale var(--cz-lively);
+}
+.doc-color input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.doc-color input::-webkit-color-swatch {
+  border: 0;
+  border-radius: inherit;
+}
+.doc-color input::-moz-color-swatch {
+  border: 0;
+  border-radius: inherit;
+}
+.doc-color input:focus-visible {
+  scale: 1.12;
+}
+.doc-swatches {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 4px;
+  max-width: 600px;
+}
+.doc-swatches > span {
+  height: var(--cz-h-md);
+  border-radius: var(--cz-radius-sm);
+  corner-shape: var(--cz-shape);
+  transition: background-color var(--cz-smooth);
+}
+.doc-code {
+  margin: 0;
+  padding: 12px 16px;
+  overflow-x: auto;
+  border-radius: var(--cz-radius-lg);
+  corner-shape: var(--cz-shape);
+  background: var(--cz-fill-1);
+  color: var(--cz-ink);
+  font-family: var(--cz-mono);
+  font-size: var(--cz-small);
+  line-height: var(--cz-leading-small);
+}
+.doc-props td:first-child {
+  font-weight: var(--cz-w-label);
+  white-space: nowrap;
+}
+.doc-props td:nth-child(2) {
+  color: var(--cz-ink-2);
+}
+.doc-value {
+  min-width: 4ch;
+  color: var(--cz-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.doc-skeleton-row {
+  width: 100%;
+  max-width: 360px;
+}
+.doc-skeleton-part {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.doc-skeleton-part[hidden] {
+  display: none;
+}
+.doc-skeleton-lines {
+  display: grid;
+  flex: 1;
+  gap: 6px;
+}
+
+@media (max-width: 860px) {
+  .doc-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .doc-nav {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .doc-props td:first-child {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .doc-props :is(th, td) {
+    padding-inline: 8px;
+  }
+}
+
+.doc-chat {
+  display: grid;
+  gap: 8px;
+  max-width: 440px;
+  padding: 8px;
+  border-radius: var(--cz-radius-xl);
+  corner-shape: var(--cz-shape);
+  background: var(--cz-fill-1);
+}
+.doc-chat > .cz-chat {
+  height: 300px;
+}

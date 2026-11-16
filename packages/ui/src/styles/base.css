@@ -1,0 +1,123 @@
+html {
+  background: var(--cz-page);
+  color: var(--cz-ink);
+  font-family: var(--cz-font);
+  font-size: var(--cz-text);
+  font-weight: var(--cz-w-text);
+  line-height: var(--cz-leading);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+}
+
+/* Focus never draws a ring: every control shows it the way it shows hover. */
+:focus-visible {
+  outline: none;
+}
+
+::selection {
+  background: var(--cz-selection);
+}
+
+:where(button, input, select, textarea) {
+  font: inherit;
+  color: inherit;
+}
+
+:where(fieldset) {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+:where(button, [role="button"], select, summary, label) {
+  touch-action: manipulation;
+}
+
+:where(h1, h2, h3, h4) {
+  margin: 0;
+  font-size: var(--cz-text);
+  font-weight: var(--cz-w-label);
+  text-wrap: balance;
+}
+
+:where(p) {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/*
+ * A keyboard-driven change, or a theme switch, lands instantly; the attribute is set for a frame around it.
+ * The theme toggle keeps its own motion: it is the one thing that should move while the colours flip.
+ */
+[data-cz-instant] *:not(.cz-theme-toggle *),
+[data-cz-instant] *:not(.cz-theme-toggle *)::before,
+[data-cz-instant] *:not(.cz-theme-toggle *)::after {
+  /* biome-ignore lint/complexity/noImportantStyles: for one frame it must beat every component's own transition */
+  transition: none !important;
+}
+
+/* Switching corners morphs every radius instead of snapping. */
+[data-cz-morph] *,
+[data-cz-morph] *::before,
+[data-cz-morph] *::after {
+  /* biome-ignore lint/complexity/noImportantStyles: while corners switch, only the radius may move, on every component */
+  transition: border-radius var(--cz-smooth) !important;
+}
+
+/* A theme switch spreads as a soft-edged circle; other page transitions keep their own look. */
+@property --cz-reveal {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+:root[data-cz-revealing]::view-transition-old(root),
+:root[data-cz-revealing]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+:root[data-cz-revealing]::view-transition-new(root) {
+  -webkit-mask-image: radial-gradient(
+    circle at var(--cz-reveal-x, 50%) var(--cz-reveal-y, 0px),
+    #000 calc(var(--cz-reveal) - 64px),
+    transparent var(--cz-reveal)
+  );
+  mask-image: radial-gradient(
+    circle at var(--cz-reveal-x, 50%) var(--cz-reveal-y, 0px),
+    #000 calc(var(--cz-reveal) - 64px),
+    transparent var(--cz-reveal)
+  );
+}
+
+/* On touch screens, small controls keep their look and get a 44 px target. */
+@media (pointer: coarse) {
+  :where(.cz-button, .cz-chip, .cz-tab, .cz-segmented > label)::after {
+    content: "";
+    position: absolute;
+    inset: 50% 50%;
+    min-width: 44px;
+    min-height: 44px;
+    width: 100%;
+    height: 100%;
+    translate: -50% -50%;
+  }
+}
+
+/* Text for screen readers only. */
+.cz-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
